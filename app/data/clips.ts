@@ -66,7 +66,7 @@ export const CLIPS: Clip[] = [
     date: 'FEB 2026',
     views: 'TBA',
     likes: 0,
-    youtubeVideoId: undefined, // ← paste the YouTube video ID here when available
+    youtubeVideoId: 'dQw4w9WgXcQ', // ← rickroll placeholder; replace with real video ID when available
     thumbnailGradient: 'from-rose-900/60 via-purple-950/80 to-black',
     tags: ['Valorant', 'VGL', 'Clutch', 'Riviera 2026'],
     featured: true,
@@ -87,7 +87,7 @@ export const CLIPS: Clip[] = [
     date: 'FEB 2026',
     views: 'TBA',
     likes: 0,
-    youtubeVideoId: undefined,
+    youtubeVideoId: 'dQw4w9WgXcQ', // ← rickroll placeholder; replace with real video ID when available
     thumbnailGradient: 'from-emerald-950/70 via-gray-950/80 to-black',
     tags: ['BGMI', 'VGL', 'Highlight', 'Battle Royale'],
     featured: false,
@@ -108,7 +108,7 @@ export const CLIPS: Clip[] = [
     date: 'FEB 2026',
     views: 'TBA',
     likes: 0,
-    youtubeVideoId: undefined,
+    youtubeVideoId: 'dQw4w9WgXcQ', // ← rickroll placeholder; replace with real video ID when available
     thumbnailGradient: 'from-teal-950/70 via-black to-black',
     tags: ['FIFA', 'VGL', 'Highlight', 'Campus Open'],
     featured: false,
