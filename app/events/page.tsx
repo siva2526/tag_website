@@ -11,11 +11,43 @@ import { useToast } from '../components/Toast';
 
 type FilterTab = EventStatus | 'all';
 
-const TAB_CONFIG: { key: FilterTab; label: string; icon: string; emptyMsg: string }[] = [
-  { key: 'all', label: 'ALL QUESTS', icon: '📋', emptyMsg: 'No quests match your search query.' },
-  { key: 'upcoming', label: 'UPCOMING', icon: '🔮', emptyMsg: 'No upcoming quests available, adventurer.' },
-  { key: 'ongoing', label: 'ACTIVE MISSIONS', icon: '⚔️', emptyMsg: 'No active missions. Check back soon!' },
-  { key: 'completed', label: 'COMPLETED RAIDS', icon: '✅', emptyMsg: 'No completed raids found.' },
+interface TabConfig {
+  key: FilterTab;
+  label: string;
+  icon: string;
+  emptyTitle: string;
+  emptyMsg: string;
+}
+
+const TAB_CONFIG: TabConfig[] = [
+  {
+    key: 'all',
+    label: 'ALL QUESTS',
+    icon: '📋',
+    emptyTitle: 'NO QUESTS MATCH SEARCH',
+    emptyMsg: 'No missions match your current keyword or pillar filter. Try clearing your filters.',
+  },
+  {
+    key: 'upcoming',
+    label: 'UPCOMING',
+    icon: '🔮',
+    emptyTitle: 'NO UPCOMING QUESTS SCHEDULED',
+    emptyMsg: 'New tournaments and workshops are currently being organized. Join our Discord to get pinged the moment registrations open!',
+  },
+  {
+    key: 'ongoing',
+    label: 'ACTIVE MISSIONS',
+    icon: '⚔️',
+    emptyTitle: 'NO MISSIONS CURRENTLY ACTIVE',
+    emptyMsg: 'There are no live tournaments or active jams at this moment. Check back soon or browse our completed raids below.',
+  },
+  {
+    key: 'completed',
+    label: 'COMPLETED RAIDS',
+    icon: '✅',
+    emptyTitle: 'NO COMPLETED RAIDS FOUND',
+    emptyMsg: 'Past raid archives and tournament brackets will be cataloged here as events conclude.',
+  },
 ];
 
 function statusBadge(status: EventStatus) {
@@ -49,7 +81,23 @@ function EventCard({ event }: { event: Event }) {
   const isTech = event.category === 'Technology';
   const { showToast } = useToast();
 
+  const dateParts = event.date.trim().split(/\s+/);
+  const dateDay = dateParts[0] || 'TBA';
+  const dateSub = dateParts.slice(1).join(' ') || (event.isPlaceholder ? 'SOON' : '');
+
   const handleClick = () => {
+    if (event.isPlaceholder) {
+      playSelect();
+      showToast('📢 Slot reserved: Quest announcement drops on Discord soon!', {
+        type: 'info',
+        icon: '📢',
+      });
+      if (event.link) {
+        window.open(event.link, '_blank', 'noopener,noreferrer');
+      }
+      return;
+    }
+
     if (event.link) {
       playSelect();
       window.open(event.link, '_blank', 'noopener,noreferrer');
@@ -67,9 +115,11 @@ function EventCard({ event }: { event: Event }) {
 
   return (
     <div
-      className={`relative bg-black/80 border-2 border-gray-800 rounded-xl p-6 transition-all duration-300 group cursor-pointer flex flex-col justify-between ${
-        event.status === 'completed' ? 'opacity-85' : ''
-      }`}
+      className={`relative bg-black/80 border-2 rounded-xl p-6 transition-all duration-300 group cursor-pointer flex flex-col justify-between ${
+        event.isPlaceholder
+          ? 'border-dashed border-gray-800 hover:border-yellow-400/60'
+          : 'border-gray-800'
+      } ${event.status === 'completed' ? 'opacity-85' : ''}`}
       style={{
         transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
         boxShadow: isHovered
@@ -109,23 +159,30 @@ function EventCard({ event }: { event: Event }) {
               </span>
             </div>
             <div className="flex flex-col gap-1">
-              <span
-                className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                  isTech
-                    ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30'
-                    : 'bg-green-500/20 text-green-500 border border-green-500/30'
-                }`}
-              >
-                {event.category}
-              </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span
+                  className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                    isTech
+                      ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30'
+                      : 'bg-green-500/20 text-green-500 border border-green-500/30'
+                  }`}
+                >
+                  {event.category}
+                </span>
+                {event.isPlaceholder && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400/90 border border-yellow-400/30 font-mono tracking-wider">
+                    PLACEHOLDER
+                  </span>
+                )}
+              </div>
               {statusBadge(event.status)}
             </div>
           </div>
           <div className="text-right font-mono">
             <div className={`text-2xl font-bold ${isTech ? 'text-yellow-400' : 'text-green-400'}`}>
-              {event.date.split(' ')[0]}
+              {dateDay}
             </div>
-            <div className="text-gray-500 text-xs">{event.date.split(' ')[1]}</div>
+            {dateSub && <div className="text-gray-500 text-xs">{dateSub}</div>}
           </div>
         </div>
 
@@ -183,7 +240,7 @@ function EventCard({ event }: { event: Event }) {
             <span>Share</span>
           </button>
           <span className="text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold">
-            View Quest ↗
+            {event.isPlaceholder ? 'Discord Intel ↗' : 'View Quest ↗'}
           </span>
         </div>
       </div>
@@ -191,14 +248,67 @@ function EventCard({ event }: { event: Event }) {
   );
 }
 
-function EmptyState({ message }: { message: string }) {
+function EmptyState({
+  title,
+  message,
+  onResetFilters,
+  onSwitchToCompleted,
+  hasActiveFilters,
+  activeTab,
+}: {
+  title: string;
+  message: string;
+  onResetFilters: () => void;
+  onSwitchToCompleted: () => void;
+  hasActiveFilters: boolean;
+  activeTab: FilterTab;
+}) {
   return (
-    <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-black/40 border border-gray-800 rounded-2xl">
-      <div className="text-6xl mb-4">🗺️</div>
-      <h3 className="text-xl font-bold text-gray-400 mb-2 font-mono">NO QUESTS FOUND</h3>
-      <p className="text-gray-500 font-mono text-sm max-w-md">{message}</p>
-      <div className="mt-6 text-gray-600 text-xs font-mono animate-pulse">
-        [ Check back later or adjust your filters, adventurer ]
+    <div className="col-span-full flex flex-col items-center justify-center py-16 px-6 text-center bg-black/50 border border-gray-800 rounded-2xl max-w-2xl mx-auto w-full">
+      <div className="w-16 h-16 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center text-3xl mb-4 shadow-lg shadow-yellow-400/10">
+        {activeTab === 'completed' ? '🏆' : activeTab === 'ongoing' ? '⚔️' : '🔮'}
+      </div>
+      <h3 className="text-lg md:text-xl font-bold text-gray-200 mb-2 font-mono tracking-wide">
+        {title}
+      </h3>
+      <p className="text-gray-400 font-mono text-xs sm:text-sm max-w-md leading-relaxed mb-6">
+        {message}
+      </p>
+
+      {/* Dynamic CTA buttons */}
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        {hasActiveFilters && (
+          <button
+            onClick={onResetFilters}
+            className="px-4 py-2 bg-yellow-400 text-black font-bold text-xs rounded-lg hover:bg-yellow-300 transition-all font-mono shadow-md shadow-yellow-400/20"
+          >
+            Reset Filters
+          </button>
+        )}
+
+        {(activeTab === 'upcoming' || activeTab === 'ongoing') && (
+          <>
+            <button
+              onClick={onSwitchToCompleted}
+              className="px-4 py-2 bg-gray-900 border border-gray-700 hover:border-yellow-400 text-gray-300 hover:text-white font-bold text-xs rounded-lg transition-all font-mono"
+            >
+              Browse Completed Raids →
+            </button>
+            <a
+              href="https://discord.com/invite/Y9cpqdvZE4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-[#5865F2]/20 border border-[#5865F2]/40 hover:bg-[#5865F2]/30 text-indigo-300 font-bold text-xs rounded-lg transition-all font-mono inline-flex items-center gap-1.5"
+            >
+              <span>Join Discord</span>
+              <span>↗</span>
+            </a>
+          </>
+        )}
+      </div>
+
+      <div className="mt-6 text-gray-600 text-[11px] font-mono">
+        [ System Status: Active // Guild Dispatch Standby ]
       </div>
     </div>
   );
@@ -350,9 +460,21 @@ export default function EventsPage() {
               filteredEvents.map((event) => <EventCard key={event.id} event={event} />)
             ) : (
               <EmptyState
+                title={
+                  TAB_CONFIG.find((t) => t.key === activeTab)?.emptyTitle ?? 'NO QUESTS FOUND'
+                }
                 message={
                   TAB_CONFIG.find((t) => t.key === activeTab)?.emptyMsg ?? 'No quests found.'
                 }
+                hasActiveFilters={Boolean(searchQuery || categoryFilter !== 'all')}
+                activeTab={activeTab}
+                onResetFilters={() => {
+                  setSearchQuery('');
+                  setCategoryFilter('all');
+                }}
+                onSwitchToCompleted={() => {
+                  setActiveTab('completed');
+                }}
               />
             )}
           </div>

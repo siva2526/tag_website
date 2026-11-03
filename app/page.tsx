@@ -82,8 +82,10 @@ function EventCard({ title, date, description, category, link, xpReward, difficu
           </div>
         </div>
         <div className="text-right font-mono">
-          <div className="text-2xl font-bold text-yellow-400">{date.split(' ')[0]}</div>
-          <div className="text-gray-500 text-xs">{date.split(' ')[1]}</div>
+          <div className="text-2xl font-bold text-yellow-400">{date.trim().split(/\s+/)[0] || 'TBA'}</div>
+          {date.trim().split(/\s+/)[1] && (
+            <div className="text-gray-500 text-xs">{date.trim().split(/\s+/).slice(1).join(' ')}</div>
+          )}
         </div>
       </div>
 
@@ -441,20 +443,33 @@ export default function Home() {
             <p className="text-gray-400 font-mono text-sm">{featuredEvents.length} QUESTS AVAILABLE</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {featuredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                title={event.title}
-                date={event.date}
-                description={event.description}
-                category={event.category}
-                link={event.link}
-                xpReward={event.xpReward}
-                difficulty={event.difficulty}
-              />
-            ))}
-          </div>
+          {featuredEvents.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {featuredEvents.map((event) => (
+                <EventCard
+                  key={event.id}
+                  title={event.title}
+                  date={event.date}
+                  description={event.description}
+                  category={event.category}
+                  link={event.link}
+                  xpReward={event.xpReward}
+                  difficulty={event.difficulty}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-black/60 border border-gray-800 rounded-2xl max-w-lg mx-auto">
+              <div className="text-4xl mb-3">🔮</div>
+              <p className="text-gray-400 font-mono text-sm mb-4">No quests currently featured on the main board.</p>
+              <Link
+                href="/events"
+                className="px-4 py-2 bg-yellow-400 text-black font-bold text-xs rounded-lg hover:bg-yellow-300 transition-all font-mono inline-block"
+              >
+                Explore Full Quest Board →
+              </Link>
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Link

@@ -2,66 +2,65 @@ export type EventStatus = 'upcoming' | 'ongoing' | 'completed';
 export type EventCategory = 'Technology' | 'Gaming';
 
 export interface Event {
-  id: number;
+  id: number | string;
   title: string;
-  date: string;           // Display date e.g. "26 FEB"
-  fullDate: string;       // Full date range e.g. "Feb 26 - Mar 1, 2026"
+  date: string;           // Display date e.g. "26 FEB", "TBA 2026", or "LIVE NOW"
+  fullDate: string;       // Full date range e.g. "Feb 26 - Mar 1, 2026" or "Dates to be announced"
   description: string;
   category: EventCategory;
-  link: string;
-  status: EventStatus;
-  xpReward?: string;      // e.g. "2,500 XP"
-  difficulty?: string;    // e.g. "ADVANCED"
-  featured?: boolean;     // Show on home page
+  link: string;           // Event page, registration URL, or Discord link
+  status: EventStatus;    // Simply switch between: 'upcoming' | 'ongoing' | 'completed'
+  xpReward?: string;      // e.g. "3,000 XP"
+  difficulty?: string;    // e.g. "PRO" | "ADVANCED" | "TBA"
+  featured?: boolean;     // Toggle true to highlight on the homepage (recommended: 3 events)
+  isPlaceholder?: boolean;// Mark true for placeholder/TBA events (will be emptied in a later iteration)
 }
 
 /**
- * Master event list for TAG Club.
- * To showcase an event on the home page, set `featured: true`.
- * To add or remove events, simply add/remove entries here.
+ * ============================================================================
+ * TAG CLUB EVENTS REGISTRY & MAINTENANCE GUIDE
+ * ============================================================================
+ * 
+ * 🎮 HOW TO MOVE AN EVENT (Status Transition):
+ *    Change the `status` field to any of:
+ *      • 'upcoming'  -> Displays under UPCOMING tab with blue badge
+ *      • 'ongoing'   -> Displays under ACTIVE MISSIONS tab with pulsing green badge
+ *      • 'completed' -> Displays under COMPLETED RAIDS tab with gray checkmark
+ * 
+ * ➕ HOW TO ADD A NEW EVENT:
+ *    Copy `EVENT_TEMPLATE` below, fill in details, and add to the `events` array.
+ * 
+ * 🗑️ HOW TO DELETE OR CLEAR PLACEHOLDERS:
+ *    When you are ready to empty the placeholder events, simply delete their
+ *    entries from the array. The website automatically handles 0 events with a
+ *    custom empty state and Discord CTA without breaking.
+ * 
+ * ⭐ HOMEPAGE FEATURED:
+ *    Set `featured: true` to display on the homepage Quest Board.
+ * ============================================================================
  */
+
+export const EVENT_TEMPLATE: Event = {
+  id: 'custom-event-id',
+  title: 'Event Title',
+  date: 'DD MMM',
+  fullDate: 'Month DD - Month DD, YYYY',
+  description: '1-2 sentence description of the event or tournament.',
+  category: 'Gaming', // 'Technology' | 'Gaming'
+  link: 'https://discord.com/invite/Y9cpqdvZE4',
+  status: 'upcoming', // 'upcoming' | 'ongoing' | 'completed'
+  xpReward: '3,000 XP',
+  difficulty: 'ADVANCED',
+  featured: false,
+  isPlaceholder: false,
+};
+
 export const events: Event[] = [
+  // ============================================================================
+  // COMPLETED RAIDS (Official VGL Tournaments)
+  // ============================================================================
   {
     id: 1,
-    title: 'TAG Game Jam 2026',
-    date: '15 MAR',
-    fullDate: 'Mar 15 - Mar 17, 2026',
-    description: '48 hours of rapid prototyping, caffeine-fueled creativity, and game engine mastery. Build a playable game from scratch around a surprise theme.',
-    category: 'Technology',
-    link: 'https://discord.com/invite/Y9cpqdvZE4',
-    status: 'upcoming',
-    xpReward: '5,000 XP',
-    difficulty: 'EXPERT',
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'Nexus LAN Championship',
-    date: '28 MAR',
-    fullDate: 'Mar 28 - Mar 29, 2026',
-    description: 'Campus-wide LAN tournament featuring tactical shooters, sports games, and fighting games. Low latency, high energy, and pure adrenaline.',
-    category: 'Gaming',
-    link: 'https://discord.com/invite/Y9cpqdvZE4',
-    status: 'upcoming',
-    xpReward: '4,000 XP',
-    difficulty: 'PRO',
-    featured: false,
-  },
-  {
-    id: 3,
-    title: 'Guild Arena: AI Game Agent Challenge',
-    date: '05 MAR',
-    fullDate: 'Mar 5 - Mar 9, 2026',
-    description: 'Design and train intelligent bots and pathfinding algorithms to battle in a custom multiplayer grid arena. Live leaderboard active now!',
-    category: 'Technology',
-    link: 'https://discord.com/invite/Y9cpqdvZE4',
-    status: 'ongoing',
-    xpReward: '4,500 XP',
-    difficulty: 'ADVANCED',
-    featured: true,
-  },
-  {
-    id: 4,
     title: 'VGL x Valorant',
     date: '26 FEB',
     fullDate: 'Feb 26 - Mar 1, 2026',
@@ -74,7 +73,7 @@ export const events: Event[] = [
     featured: true,
   },
   {
-    id: 5,
+    id: 2,
     title: 'VGL x FIFA',
     date: '28 FEB',
     fullDate: 'Feb 28 - Mar 1, 2026',
@@ -84,10 +83,10 @@ export const events: Event[] = [
     status: 'completed',
     xpReward: '2,500 XP',
     difficulty: 'ADVANCED',
-    featured: false,
+    featured: true,
   },
   {
-    id: 6,
+    id: 3,
     title: 'VGL x BGMI',
     date: '21 FEB',
     fullDate: 'Feb 21, 2026',
@@ -97,6 +96,56 @@ export const events: Event[] = [
     status: 'completed',
     xpReward: '3,500 XP',
     difficulty: 'LEGENDARY',
+    featured: true,
+  },
+
+  // ============================================================================
+  // UPCOMING QUESTS (Placeholders — will become empty in a later iteration)
+  // ============================================================================
+  {
+    id: 'placeholder-upcoming-1',
+    title: '[Placeholder] Upcoming Quest #1: TBA',
+    date: 'TBA 2026',
+    fullDate: 'Dates To Be Announced',
+    description: 'Placeholder slot for an upcoming game development hackathon or tech sprint. Final theme and schedules will be published once officially scheduled.',
+    category: 'Technology',
+    link: 'https://discord.com/invite/Y9cpqdvZE4',
+    status: 'upcoming',
+    xpReward: 'TBA',
+    difficulty: 'TBA',
     featured: false,
+    isPlaceholder: true,
+  },
+  {
+    id: 'placeholder-upcoming-2',
+    title: '[Placeholder] Upcoming Quest #2: TBA',
+    date: 'TBA 2026',
+    fullDate: 'Dates To Be Announced',
+    description: 'Placeholder slot for the next campus esports showdown. Join the TAG Discord server to get pinged the instant registrations go live.',
+    category: 'Gaming',
+    link: 'https://discord.com/invite/Y9cpqdvZE4',
+    status: 'upcoming',
+    xpReward: 'TBA',
+    difficulty: 'TBA',
+    featured: false,
+    isPlaceholder: true,
+  },
+
+  // ============================================================================
+  // ACTIVE MISSIONS (Placeholders — will become empty in a later iteration)
+  // ============================================================================
+  {
+    id: 'placeholder-ongoing-1',
+    title: '[Placeholder] Active Mission: TBA',
+    date: 'LIVE TBA',
+    fullDate: 'No Active Mission Right Now',
+    description: 'Placeholder slot for currently live tournaments and workshops. When a tournament is active, its live leaderboard and bracket links will be anchored here.',
+    category: 'Technology',
+    link: 'https://discord.com/invite/Y9cpqdvZE4',
+    status: 'ongoing',
+    xpReward: 'TBA',
+    difficulty: 'TBA',
+    featured: false,
+    isPlaceholder: true,
   },
 ];
