@@ -1,24 +1,34 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { useToast } from './Toast';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
 interface NavbarProps {
   logoUrl?: string;
   logoAlt?: string;
+  onOpenTerminal?: () => void;
 }
 
-export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Club Logo' }: NavbarProps) {
+export default function Navbar({
+  logoUrl = '/TAG_Vector.svg',
+  logoAlt = 'TAG Club Logo',
+  onOpenTerminal
+}: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [frame, setFrame] = useState(0);
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +45,23 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
     }, 200);
     return () => clearInterval(interval);
   }, []);
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    const next = clickCount + 1;
+    setClickCount(next);
+
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickCount(0);
+    }, 2500);
+
+    if (next === 5) {
+      showToast('⚡ SPEEDRUN COMBO x5! Guild Agility +10', { type: 'xp', icon: '⚡' });
+    } else if (next === 10) {
+      showToast('🏆 GUILD MASTER BADGE UNLOCKED! Secret Member XP +5000', { type: 'success', icon: '👑' });
+      setClickCount(0);
+    }
+  };
 
   const characterFrames = ['◐', '◓', '◑', '◒'];
   const navLinks = [
@@ -55,24 +82,28 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
           <div className="flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center gap-3 group">
-                {/* Logo Image with Game HUD Effect */}
-                <div className="relative transition-all duration-300 group-hover:scale-110">
-                  <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Image
-                    src={logoUrl}
-                    alt={logoAlt}
-                    width={100}
-                    height={100}
-                    className="object-contain relative z-10"
-                    priority
-                  />
-                </div>
-                {/* Player Tag */}
-                <div className="hidden md:block">
-                  <span className="text-xs text-gray-500 font-mono">[GUILD_MASTER]</span>
-                </div>
-              </Link>
+              <div onClick={handleLogoClick} className="cursor-pointer">
+                <Link href="/" className="flex items-center gap-3 group">
+                  {/* Logo Image with Game HUD Effect */}
+                  <div className="relative transition-all duration-300 group-hover:scale-110">
+                    <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <Image
+                      src={logoUrl}
+                      alt={logoAlt}
+                      width={100}
+                      height={100}
+                      className="object-contain relative z-10"
+                      priority
+                    />
+                  </div>
+                  {/* Player Tag */}
+                  <div className="hidden md:block">
+                    <span className="text-xs text-gray-500 font-mono group-hover:text-yellow-400 transition-colors">
+                      [GUILD_MASTER]
+                    </span>
+                  </div>
+                </Link>
+              </div>
             </div>
 
             {/* Desktop Navigation Links - Game Menu */}
@@ -91,7 +122,14 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
               ))}
 
               {/* Active Player Indicator */}
-              <div className="flex items-center gap-2 ml-4 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg">
+              <div
+                onClick={() => {
+                  if (onOpenTerminal) onOpenTerminal();
+                  else showToast('⚔️ Player Status: Guild Champion • Online', { type: 'info', icon: '🛡️' });
+                }}
+                className="flex items-center gap-2 ml-4 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg cursor-pointer hover:border-yellow-400/60 transition-colors"
+                title="Click for Guild Status"
+              >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-gray-400 font-mono">LVL.42</span>
                 <span className="text-xs text-yellow-400 font-mono">{characterFrames[frame]}</span>
@@ -100,7 +138,7 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
 
             <div className="flex items-center gap-4">
               {/* Desktop CTA Button */}
-              <a href="https://discord.com/invite/Y9cpqdvZE4">
+              <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                 <button
                   className="hidden lg:flex items-center gap-2 px-6 py-2.5 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-400/25"
                 >
@@ -112,6 +150,7 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
               <button
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle navigation menu"
               >
                 <svg
                   className="w-6 h-6 text-gray-300"
@@ -146,7 +185,7 @@ export default function Navbar({ logoUrl = '/TAG_Vector.svg', logoAlt = 'TAG Clu
               ))}
               {/* DISCORD BUTTON */}
               <div className="pt-4">
-                <a href="https://discord.com/invite/Y9cpqdvZE4">
+                <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                   <button className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-colors">
                     <span>🎮</span>
                     JOIN DISCORD

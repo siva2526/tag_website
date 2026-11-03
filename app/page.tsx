@@ -15,6 +15,8 @@ import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageBackground from './components/PageBackground';
+import SecretTerminal from './components/SecretTerminal';
+import ProTipTicker from './components/ProTipTicker';
 import { events as allEvents } from './data/events';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
@@ -206,6 +208,22 @@ function PillarCard({ title, description, icon }: PillarCardProps) {
 export default function Home() {
   const [frame, setFrame] = useState(0);
   const [selectedClass, setSelectedClass] = useState<'tech' | 'gaming'>('tech');
+  const [terminalOpen, setTerminalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle secret terminal with backtick ` or ~
+      if (e.key === '`' || e.key === '~') {
+        const activeTag = (document.activeElement as HTMLElement)?.tagName;
+        if (activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
+          e.preventDefault();
+          setTerminalOpen(prev => !prev);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -242,7 +260,11 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white overflow-hidden font-mono">
       <PageBackground />
 
-      <Navbar logoUrl="/TAG_Vector.svg" logoAlt="TAG Club VIT Vellore" />
+      <Navbar
+        logoUrl="/TAG_Vector.svg"
+        logoAlt="TAG Club VIT Vellore"
+        onOpenTerminal={() => setTerminalOpen(true)}
+      />
 
       {/* Hero Section - Game Lobby */}
       <section className="relative pt-16 pb-20 px-8">
@@ -369,6 +391,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Guild Intel / Pro Tip Ticker */}
+      <ProTipTicker onOpenTerminal={() => setTerminalOpen(true)} />
 
       {/* Pillars Section - Guild Classes */}
       <section id="about" className="py-20 px-8">
@@ -525,6 +550,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <SecretTerminal isOpen={terminalOpen} onClose={() => setTerminalOpen(false)} />
 
       <Footer />
 
