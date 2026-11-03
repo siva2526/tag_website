@@ -2,175 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import styles from "./page.module.css";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import PageBackground from './components/PageBackground';
+import { events as allEvents } from './data/events';
+
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
-interface NavbarProps {
-  logoUrl: string;
-  logoAlt?: string;
-}
-
-function Navbar({ logoUrl, logoAlt = "TAG Club Logo" }: NavbarProps) {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [frame, setFrame] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Character animation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFrame(prev => (prev + 1) % 4);
-    }, 200);
-    return () => clearInterval(interval);
-  }, []);
-
-  const characterFrames = ['◐', '◓', '◑', '◒'];
-  const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Events', href: '#events' },
-    { name: 'Team', href: '/loading' },
-  ];
-
-  return (
-    <>
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 py-3' 
-          : 'bg-black/90 backdrop-blur-sm py-5'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo Section */}
-            <div className="flex items-center">
-              <a href="#" className="flex items-center gap-3 group">
-                {/* Logo Image with Game HUD Effect */}
-                <div className="relative transition-all duration-300 group-hover:scale-110">
-                  <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Image
-                    src={logoUrl}
-                    alt={logoAlt}
-                    width={100}
-                    height={100}
-                    className="object-contain relative z-10"
-                    priority
-                  />
-                </div>
-                {/* Player Tag */}
-                <div className="hidden md:block">
-                  <span className="text-xs text-gray-500 font-mono">[GUILD_MASTER]</span>
-                </div>
-              </a>
-            </div>
-
-            {/* Desktop Navigation Links - Game Menu */}
-            <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-gray-300 hover:text-yellow-400 transition-colors duration-300 font-bold text-sm tracking-wide relative group"
-                >
-                  <span className="relative">
-                    {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-                  </span>
-                </a>
-              ))}
-
-              {/* Active Player Indicator */}
-              <div className="flex items-center gap-2 ml-4 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-gray-400 font-mono">LVL.42</span>
-                <span className="text-xs text-yellow-400 font-mono">{characterFrames[frame]}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {/* Desktop CTA Button */}
-              <a href="https://discord.com/invite/Y9cpqdvZE4">
-              <button
-              className="hidden lg:flex items-center gap-2 px-6 py-2.5 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-400/25"
-              >
-                <span>🎮</span>
-                JOIN DISCORD
-              </button>
-              </a>
-              {/* Mobile Menu Toggle */}
-              <button
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <svg
-                  className="w-6 h-6 text-gray-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  {mobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 animate-in slide-in-from-top duration-300">
-            <div className="px-6 py-6 space-y-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="block py-3 text-gray-300 hover:text-yellow-400 transition-colors text-lg font-bold border-b border-gray-800 last:border-b-0"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </a>
-              ))}
-              {/*DISCORD BUTTON*/}
-              <div className="pt-4">
-                <a href="https://discord.com/invite/Y9cpqdvZE4">
-                <button className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-colors">
-                  <span>🎮</span>
-                  JOIN DISCORD
-                </button>
-                </a>
-              </div>
-              
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Spacer */}
-      <div className="h-24" />
-    </>
-  );
-}
+// Only show featured events on home page
+const featuredEvents = allEvents.filter(e => e.featured);
 
 interface EventCardProps {
   title: string;
@@ -178,19 +28,21 @@ interface EventCardProps {
   description: string;
   category: 'Technology' | 'Gaming';
   link: string;
+  xpReward?: string;
+  difficulty?: string;
 }
 
-function EventCard({ title, date, description, category, link }: EventCardProps) {
+function EventCard({ title, date, description, category, link, xpReward, difficulty }: EventCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   const isTech = category === 'Technology';
 
   const handleClick = () => {
-    router.push(link);
+    window.open(link, '_blank', 'noopener,noreferrer');
   };
 
   return (
-    <div 
+    <div
       className="relative bg-black/80 border-2 border-gray-800 rounded-xl p-6 transition-all duration-300 hover:scale-[1.02] group cursor-pointer"
       style={{
         transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
@@ -209,7 +61,7 @@ function EventCard({ title, date, description, category, link }: EventCardProps)
     >
       {/* Animated Border */}
       <div className={`absolute inset-0 rounded-xl border-2 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'} ${isTech ? 'border-yellow-400' : 'border-green-500'}`}></div>
-      
+
       {/* Quest Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -218,8 +70,8 @@ function EventCard({ title, date, description, category, link }: EventCardProps)
           </div>
           <div>
             <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-              isTech 
-                ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30' 
+              isTech
+                ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30'
                 : 'bg-green-500/20 text-green-500 border border-green-500/30'
             }`}>
               {category}
@@ -236,7 +88,7 @@ function EventCard({ title, date, description, category, link }: EventCardProps)
       <h3 className="text-xl font-bold mb-3 text-white group-hover:text-yellow-400 transition-colors">
         {title}
       </h3>
-      
+
       <p className="text-gray-400 text-sm mb-4 font-mono leading-relaxed">
         {description}
       </p>
@@ -246,18 +98,18 @@ function EventCard({ title, date, description, category, link }: EventCardProps)
         <div className="flex justify-between items-center text-xs">
           <span className="text-gray-500 font-mono">DIFFICULTY</span>
           <span className={`font-bold ${isTech ? 'text-yellow-400' : 'text-green-500'}`}>
-            {isTech ? 'ADVANCED' : 'PRO'}
+            {difficulty ?? (isTech ? 'ADVANCED' : 'PRO')}
           </span>
         </div>
         <div className="flex justify-between items-center text-xs">
           <span className="text-gray-500 font-mono">REWARD</span>
-          <span className="text-yellow-400 font-bold">{isTech ? '2,500 XP' : '3,000 XP'}</span>
+          <span className="text-yellow-400 font-bold">{xpReward ?? (isTech ? '2,500 XP' : '3,000 XP')}</span>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden mb-4">
-        <div 
+        <div
           className={`h-full transition-all duration-300 ${isTech ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' : 'bg-gradient-to-r from-green-500 to-green-700'}`}
           style={{ width: isHovered ? '85%' : '60%' }}
         ></div>
@@ -280,7 +132,7 @@ function StatItem({ value, label }: StatItemProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
+    <div
       className="text-center group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -306,22 +158,22 @@ function PillarCard({ title, description, icon }: PillarCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
+    <div
       className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-gray-900/80 to-black/80 p-8 border-2 border-gray-800 transition-all duration-500 hover:border-yellow-400/50 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Scanline Effect */}
       <div className="absolute inset-0 bg-scanline opacity-5 pointer-events-none"></div>
-      
+
       {/* Animated Background */}
-      <div 
+      <div
         className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/10 to-yellow-400/0 transition-transform duration-700"
         style={{
           transform: isHovered ? 'translateX(0)' : 'translateX(-100%)',
         }}
       />
-      
+
       <div className="relative z-10">
         <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mb-6 shadow-lg shadow-yellow-400/30 group-hover:scale-110 transition-transform duration-300">
           <span className="text-3xl font-bold text-black">{icon}</span>
@@ -332,7 +184,7 @@ function PillarCard({ title, description, icon }: PillarCardProps) {
         <p className="text-gray-400 leading-relaxed font-mono text-sm">
           {description}
         </p>
-        
+
         {/* XP Bar */}
         <div className="mt-6 pt-4 border-t border-gray-800">
           <div className="flex justify-between text-xs mb-1">
@@ -340,7 +192,7 @@ function PillarCard({ title, description, icon }: PillarCardProps) {
             <span className="text-yellow-400">{isHovered ? '75%' : '60%'}</span>
           </div>
           <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 transition-all duration-500"
               style={{ width: isHovered ? '75%' : '60%' }}
             ></div>
@@ -354,7 +206,6 @@ function PillarCard({ title, description, icon }: PillarCardProps) {
 export default function Home() {
   const [frame, setFrame] = useState(0);
   const [selectedClass, setSelectedClass] = useState<'tech' | 'gaming'>('tech');
-  const [hoveredPillar, setHoveredPillar] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -364,37 +215,6 @@ export default function Home() {
   }, []);
 
   const characterFrames = ['◐', '◓', '◑', '◒'];
-  const pixelChars = ['▀', '▄', '█', '▌', '▐', '░', '▒', '▓'];
-
-  const events = [
-    {
-      id: 1,
-      title: 'VGL x Valorant',
-      date: '26 FEB',
-      fullDate: 'Feb 26 - Mar 1, 2026',
-      description: 'High-stakes FPS duels where pinpoint accuracy meets game-changing abilities. Outthink, outplay, and outlast in the ultimate tactical showdown.',
-      category: 'Gaming' as const,
-      link: 'https://riviera.vit.ac.in/events/evt_93070e7af0ee4c2181cd9ba51c426144'
-    },
-    {
-      id: 2,
-      title: 'VGL x FIFA',
-      date: '28 FEB',
-      fullDate: 'Feb 28 - Mar 1, 2026',
-      description: 'The beautiful game distilled to its tactical core. Surgical passing and footballing intelligence decide the winner.',
-      category: 'Gaming' as const,
-      link: 'https://riviera.vit.ac.in/events/evt_acb34e94a74b4721b9a7bbade686ab71'
-    },
-    {
-      id: 3,
-      title: 'VGL x BGMI',
-      date: '21 FEB',
-      fullDate: 'Feb 21-21, 2026',
-      description: 'Battle royale intensity where every drop, loot, and firefight tells a story. Outlast the competition and become the last one standing.',
-      category: 'Gaming' as const,
-      link: 'https://riviera.vit.ac.in/events/evt_7912e8d5958143f5bebb4d8455e84c37'
-    }
-  ];
 
   const pillars = [
     {
@@ -420,44 +240,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white overflow-hidden font-mono">
-      {/* CRT Scanline Effect */}
-      <div className="fixed inset-0 pointer-events-none bg-scanline opacity-5 z-50"></div>
-      
-      {/* Animated Grid Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 opacity-15" style={{
-          backgroundImage: `
-            linear-gradient(to right, #fff400 1px, transparent 1px),
-            linear-gradient(to bottom, #fff400 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-          transform: 'perspective(500px) rotateX(60deg)',
-          transformOrigin: 'top',
-          height: '200%',
-          top: '-50%'
-        }} />
-        
-        {/* Floating Particles - Deterministic */}
-        {Array.from({ length: 15 }, (_, i) => {
-          const top = ((i * 37) % 70) + 15; // 15-85%
-          const left = ((i * 73) % 70) + 15; // 15-85%
-          const delay = ((i * 13) % 30) / 10; // 0-3s in 0.3s increments
-          const duration = 3 + ((i * 7) % 4); // 3-7s
-          
-          return (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full animate-ping"
-              style={{
-                top: `${top}%`,
-                left: `${left}%`,
-                animationDelay: `${delay}s`,
-                animationDuration: `${duration}s`,
-              }}
-            />
-          );
-        })}
-      </div>
+      <PageBackground />
 
       <Navbar logoUrl="/TAG_Vector.svg" logoAlt="TAG Club VIT Vellore" />
 
@@ -473,22 +256,22 @@ export default function Home() {
                 <span className="text-yellow-400 text-sm font-bold tracking-wider">SERVER VIT-01 • ONLINE</span>
                 <span className="text-gray-500 text-xs font-mono">[842/1000]</span>
               </div>
-              
+
               {/* Game Title */}
               <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight">
                 <span className="text-white">TAG</span>
                 <span className="text-yellow-400 ml-2 drop-shadow-[0_0_15px_rgba(255,244,0,0.3)]">CLUB</span>
               </h1>
-              
+
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-2xl text-gray-400">//</span>
                 <p className="text-2xl md:text-3xl font-light text-gray-300">
-                  Technology & Gaming Club
+                  Technology &amp; Gaming Club
                 </p>
               </div>
-              
+
               <p className="text-gray-400 text-lg mb-8 max-w-lg leading-relaxed font-mono">
-                ⚔️ JOIN THE PREMIER TECH & GAMING COLLECTIVE AT VIT VELLORE. 
+                ⚔️ JOIN THE PREMIER TECH &amp; GAMING COLLECTIVE AT VIT VELLORE.
                 LEVEL UP YOUR SKILLS, COMPETE IN TOURNAMENTS, AND BUILD THE FUTURE.
               </p>
 
@@ -544,7 +327,7 @@ export default function Home() {
                 <div className="absolute inset-0 border-2 border-yellow-400/20 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
                 <div className="absolute inset-[5%] border border-yellow-400/30 rounded-full animate-spin" style={{ animationDuration: '12s' }}></div>
                 <div className="absolute inset-[15%] border border-dashed border-yellow-400/20 rounded-full animate-spin" style={{ animationDuration: '20s', animationDirection: 'reverse' }}></div>
-                
+
                 {/* Character Card */}
                 <div className="absolute inset-[10%] bg-gradient-to-br from-gray-900 to-black rounded-3xl border-2 border-yellow-400/30 flex items-center justify-center backdrop-blur-sm overflow-hidden">
                   <div className="absolute inset-0 bg-scanline opacity-10"></div>
@@ -624,24 +407,33 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Featured <span className="text-yellow-400">Events</span>
             </h2>
-            <p className="text-gray-400 font-mono text-sm">{events.length} QUESTS AVAILABLE</p>
+            <p className="text-gray-400 font-mono text-sm">{featuredEvents.length} QUESTS AVAILABLE</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {events.map((event) => (
-              <EventCard key={event.id} {...event} />
+            {featuredEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                title={event.title}
+                date={event.date}
+                description={event.description}
+                category={event.category}
+                link={event.link}
+                xpReward={event.xpReward}
+                difficulty={event.difficulty}
+              />
             ))}
           </div>
 
           <div className="text-center mt-12">
-            <a 
-              href="/loading" 
+            <Link
+              href="/events"
               className="inline-flex items-center gap-3 text-yellow-400 font-bold hover:text-yellow-300 transition-colors group"
             >
               <span>VIEW ALL QUESTS</span>
               <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
-              <span className="text-xs text-gray-500 font-mono">({events.length}+)</span>
-            </a>
+              <span className="text-xs text-gray-500 font-mono">({featuredEvents.length}+)</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -655,7 +447,7 @@ export default function Home() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
-            
+
             {/* Scanline Overlay */}
             <div className="absolute inset-0 bg-scanline opacity-5 pointer-events-none"></div>
 
@@ -666,62 +458,58 @@ export default function Home() {
                 <span className="text-yellow-400 text-sm font-bold">MULTIPLAYER LOBBY • OPEN</span>
                 <span className="text-gray-500 text-xs font-mono">196 ONLINE</span>
               </div>
-              
+
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 <span className="text-white">READY TO</span>
                 <span className="text-yellow-400 ml-3">JOIN THE GUILD?</span>
               </h2>
-              
+
               <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto font-mono">
-                CONNECT WITH 150+ PLAYERS. COMPETE IN TOURNAMENTS. BUILD THE FUTURE OF TECH & GAMING.
+                CONNECT WITH 150+ PLAYERS. COMPETE IN TOURNAMENTS. BUILD THE FUTURE OF TECH &amp; GAMING.
               </p>
 
               {/* Social Links - Party Members */}
               <div className="flex flex-wrap justify-center gap-6 mb-8">
                 <a
-                  key="Instagram"
                   href="https://www.instagram.com/tagclub.vit"
                   className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                  <FontAwesomeIcon 
-                    icon={['fab', 'instagram']} 
+                  <FontAwesomeIcon
+                    icon={['fab', 'instagram']}
                     className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
-                  key="Discord"
                   href="https://discord.com/invite/Y9cpqdvZE4"
                   className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                  <FontAwesomeIcon 
-                    icon={['fab', 'discord']} 
+                  <FontAwesomeIcon
+                    icon={['fab', 'discord']}
                     className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
-                  key="LinkedIn"
                   href="https://in.linkedin.com/company/tag-club-vit"
                   className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                  <FontAwesomeIcon 
-                    icon={['fab', 'linkedin']} 
+                  <FontAwesomeIcon
+                    icon={['fab', 'linkedin']}
                     className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
-                  key="GitHub"
                   href="#"
                   className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                  <FontAwesomeIcon 
-                    icon={['fab', 'github']} 
+                  <FontAwesomeIcon
+                    icon={['fab', 'github']}
                     className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
@@ -738,46 +526,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer - Game Credits */}
-      <footer className="py-12 px-8 border-t-2 border-gray-800 bg-black/80">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-yellow-400/20 blur-md"></div>
-                <Image
-                  src="/TAG_Vector.svg"
-                  alt="TAG Logo"
-                  width={80}
-                  height={80}
-                  className="object-contain relative z-10"
-                  priority
-                />
-              </div>
-              <div className="hidden md:block">
-                <div className="text-xs text-gray-600 font-mono">[GUILD_CREST]</div>
-                <div className="text-xs text-gray-700">EST. 2020</div>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-gray-500 text-sm font-mono mb-1">
-                © {new Date().getFullYear()} TAG CLUB VIT • SEASON 14
-              </div>
-              <div className="text-gray-700 text-xs font-mono flex items-center gap-2 justify-center">
-                <span>⚡ EMPOWERING INNOVATION IN TECH & GAMING</span>
-                <span className="w-1 h-1 bg-yellow-400 rounded-full"></span>
-                <span>v4.2.0</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3 text-xs text-gray-600 font-mono">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-              <span>SERVER STATUS: ONLINE</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Custom Animations */}
       <style jsx global>{`
@@ -785,7 +534,7 @@ export default function Home() {
           0% { transform: translateY(0); }
           100% { transform: translateY(100vh); }
         }
-        
+
         .bg-scanline {
           background: linear-gradient(
             to bottom,
