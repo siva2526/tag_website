@@ -261,7 +261,7 @@ export default function TeamPage() {
                 type="text"
                 value={seasonSearch}
                 onChange={(e) => setSeasonSearch(e.target.value)}
-                placeholder="Search season e.g. '14', 'Cyber'..."
+                placeholder="Search season e.g. '2026', '2022'..."
                 className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors"
               />
               {seasonSearch && (
@@ -344,7 +344,7 @@ export default function TeamPage() {
                       </div>
 
                       <div className="flex items-center justify-between text-[11px] text-gray-500 mt-2 pt-1.5 border-t border-gray-800/60">
-                        <span>10 Council Seats</span>
+                        <span>{s.members.length} Council Seats</span>
                         <span className="text-yellow-400/80 group-hover:translate-x-1 transition-transform">
                           {isSelected ? 'Viewing ◀' : 'View →'}
                         </span>
@@ -389,10 +389,12 @@ export default function TeamPage() {
 
                   <div className="flex items-center gap-3 shrink-0">
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-yellow-400 font-mono">
-                        S{activeSeason.season}
+                      <div className="text-2xl sm:text-3xl font-bold text-yellow-400 font-mono">
+                        {activeSeason.label}
                       </div>
-                      <div className="text-[11px] text-gray-500">10 OFFICERS</div>
+                      <div className="text-[11px] text-gray-500 font-mono">
+                        {activeSeason.members.length} OFFICERS
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -427,7 +429,7 @@ export default function TeamPage() {
               {/* Class Filter Buttons */}
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  { key: 'all', label: 'All 10', icon: '👥' },
+                  { key: 'all', label: `All (${activeSeason.members.length})`, icon: '👥' },
                   { key: 'management', label: 'Management', icon: '👑' },
                   { key: 'tech', label: 'Tech & Design', icon: '⚡' },
                   { key: 'gaming', label: 'Gaming & PR', icon: '🎮' },

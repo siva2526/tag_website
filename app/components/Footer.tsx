@@ -5,9 +5,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-12 px-8 border-t-2 border-gray-800 bg-black/80">
+    <footer className="py-12 px-8 border-t-2 border-gray-800 bg-black/80 font-mono">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="absolute inset-0 bg-yellow-400/20 blur-md"></div>
@@ -22,7 +22,7 @@ export default function Footer() {
             </div>
             <div className="hidden md:block">
               <div className="text-xs text-gray-600 font-mono">[GUILD_CREST]</div>
-              <div className="text-xs text-gray-700">EST. 2020</div>
+              <div className="text-xs text-gray-700">EST. 2019</div>
             </div>
           </div>
 
@@ -32,6 +32,7 @@ export default function Footer() {
               { name: 'Home', href: '/' },
               { name: 'About', href: '/#about' },
               { name: 'Events', href: '/events' },
+              { name: 'Clips', href: '/clips' },
               { name: 'Team', href: '/team' },
             ].map((link) => (
               <Link
@@ -46,7 +47,7 @@ export default function Footer() {
 
           <div className="text-center">
             <div className="text-gray-500 text-sm font-mono mb-1">
-              © {currentYear} TAG CLUB VIT • SEASON 14
+              © {currentYear} TAG CLUB VIT • SEASON {currentYear}
             </div>
             <div className="text-gray-700 text-xs font-mono flex items-center gap-2 justify-center">
               <span>⚡ EMPOWERING INNOVATION IN TECH &amp; GAMING</span>
@@ -59,12 +60,6 @@ export default function Footer() {
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
             <span>SERVER STATUS: ONLINE</span>
           </div>
-        </div>
-
-        <div className="border-t border-gray-800 pt-6 text-center">
-          <p className="text-gray-700 text-xs font-mono">
-            BUILT WITH ⚡ BY TAG CLUB TECH TEAM • VIT VELLORE
-          </p>
         </div>
       </div>
     </footer>
