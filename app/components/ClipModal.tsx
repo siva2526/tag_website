@@ -4,6 +4,12 @@ import { useEffect, useState } from 'react';
 import { Clip } from '../data/clips';
 import { playBlip, playPowerUp } from './SoundEffects';
 import { useToast } from './Toast';
+import {
+  YOUTUBE_CONFIG,
+  getYouTubeEmbedUrl,
+  getYouTubeWatchUrl,
+  isPlaceholderPlaylist,
+} from '../config/youtube';
 
 interface ClipModalProps {
   clip: Clip | null;
@@ -46,11 +52,28 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
 
   const handleCopyLink = () => {
     playBlip();
+    const shareUrl = clip.youtubeVideoId
+      ? getYouTubeWatchUrl({ videoId: clip.youtubeVideoId })
+      : window.location.href;
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      showToast(`🔗 Link copied to clipboard!`, { type: 'success', icon: '📋' });
+      navigator.clipboard.writeText(shareUrl);
+      showToast('🔗 Link copied to clipboard!', { type: 'success', icon: '📋' });
     }
   };
+
+  const handleOpenYouTube = () => {
+    playSelect();
+    const url = clip.youtubeVideoId
+      ? getYouTubeWatchUrl({ videoId: clip.youtubeVideoId })
+      : YOUTUBE_CONFIG.channelUrl;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const embedUrl = clip.youtubeVideoId
+    ? getYouTubeEmbedUrl({ videoId: clip.youtubeVideoId, autoplay: true })
+    : null;
+
+  const isPlaceholder = clip.isPlaceholder || !clip.youtubeVideoId;
 
   return (
     <div
@@ -78,6 +101,11 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
             <span className="text-xs text-yellow-400 font-bold tracking-wider">
               REPLAY_CINEMA // {clip.game.toUpperCase()}
             </span>
+            {isPlaceholder && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400/80 border border-yellow-400/25">
+                PLACEHOLDER SLOT
+              </span>
+            )}
           </div>
           <button
             onClick={() => {
@@ -92,19 +120,39 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
 
         {/* Cinema Video Player Viewport */}
         <div className="relative aspect-video w-full bg-black flex items-center justify-center border-b border-gray-800">
-          {clip.videoEmbedUrl ? (
+          {embedUrl ? (
             <iframe
-              src={`${clip.videoEmbedUrl}?autoplay=1&rel=0`}
+              src={embedUrl}
               title={clip.title}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           ) : (
-            <div className="text-center p-8">
-              <div className="text-6xl mb-3">🎬</div>
-              <div className="text-sm text-yellow-400 font-bold mb-1">LOCAL REPLAY FEED READY</div>
-              <p className="text-xs text-gray-500">Provide a YouTube embed or mp4 link to stream gameplay.</p>
+            // Placeholder state — video not yet on YouTube
+            <div
+              className={`w-full h-full bg-gradient-to-br ${clip.thumbnailGradient} flex flex-col items-center justify-center gap-4 p-8 text-center`}
+            >
+              <div className="w-20 h-20 rounded-3xl bg-yellow-400/15 border-2 border-yellow-400/30 border-dashed flex items-center justify-center text-4xl">
+                🎬
+              </div>
+              <div>
+                <div className="text-sm font-bold text-yellow-400 mb-1">VIDEO UPLOADING SOON</div>
+                <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed">
+                  This slot is reserved. Once the clip is uploaded to YouTube, set the{' '}
+                  <code className="text-yellow-400/80 bg-yellow-400/10 px-1 rounded">youtubeVideoId</code>{' '}
+                  field in <code className="text-gray-300">app/data/clips.ts</code>.
+                </p>
+              </div>
+              <a
+                href={YOUTUBE_CONFIG.channelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-600/80 hover:bg-red-600 border border-red-500/40 text-white font-bold text-xs rounded-xl transition-all"
+              >
+                <span>▶</span>
+                Visit TAG Club YouTube
+              </a>
             </div>
           )}
         </div>
@@ -132,12 +180,15 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
               <h2 className="text-lg sm:text-xl font-bold text-white">{clip.title}</h2>
             </div>
 
-            {/* Like & Share Action Buttons */}
-            <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end flex-wrap">
               <button
                 onClick={handleLike}
+                disabled={clip.isPlaceholder}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${
-                  hasLiked
+                  clip.isPlaceholder
+                    ? 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                    : hasLiked
                     ? 'border-red-500 bg-red-500/20 text-red-400'
                     : 'border-gray-800 bg-gray-900 text-gray-300 hover:border-yellow-400 hover:text-yellow-400'
                 }`}
@@ -153,6 +204,16 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
               >
                 <span>🔗</span>
                 <span>Share</span>
+              </button>
+
+              {/* Open on YouTube button */}
+              <button
+                onClick={handleOpenYouTube}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-red-800/60 bg-red-950/30 text-red-400 hover:border-red-500 hover:bg-red-500/20 transition-all"
+                title={clip.youtubeVideoId ? 'Watch on YouTube' : 'Visit TAG Club YouTube Channel'}
+              >
+                <span>▶</span>
+                <span>{clip.youtubeVideoId ? 'YouTube' : 'Channel'}</span>
               </button>
             </div>
           </div>
@@ -201,4 +262,24 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
       `}</style>
     </div>
   );
+}
+
+// local helper for opening YouTube in modal
+function playSelect() {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 660;
+    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+  } catch {
+    // audio not available
+  }
 }

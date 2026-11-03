@@ -9,155 +9,113 @@ export interface Clip {
   game: string;
   gameIcon?: string;
   category: ClipCategory;
-  duration: string;
-  date: string;
-  views: string;
-  likes: number;
-  videoEmbedUrl?: string; // YouTube embed / Twitch clip URL
-  thumbnailGradient: string; // Dynamic cyberpunk gradient placeholder
+  duration: string;        // Display only, e.g. "0:48" or "TBA"
+  date: string;            // Display only, e.g. "FEB 2026"
+  views: string;           // Display only, e.g. "2.4K" (update manually or via API later)
+  likes: number;           // In-session upvote starting value
+  /**
+   * YouTube video ID (11 characters, e.g. "dQw4w9WgXcQ")
+   * Leave undefined to show a placeholder state when the clip isn't on YouTube yet.
+   * The getYouTubeEmbedUrl() util in app/config/youtube.ts generates the full embed URL.
+   */
+  youtubeVideoId?: string;
+  thumbnailGradient: string; // Cyberpunk gradient fallback when thumbnail image unavailable
   tags: string[];
-  featured?: boolean;
+  featured?: boolean;        // Pin to "Play of the Week" spotlight banner
+  isPlaceholder?: boolean;   // True when the clip slot is reserved but video isn't uploaded yet
   description: string;
   tournamentName?: string;
 }
 
+/**
+ * ============================================================================
+ * TAG CLUB CLIPS REGISTRY — MAINTENANCE GUIDE
+ * ============================================================================
+ *
+ * ➕ ADDING A CLIP:
+ *    1. Upload the video to YouTube (or the TAG Club channel).
+ *    2. Copy the 11-char video ID from the URL:
+ *       https://www.youtube.com/watch?v=dQw4w9WgXcQ  →  youtubeVideoId: 'dQw4w9WgXcQ'
+ *    3. Paste it into a new entry below and set isPlaceholder: false.
+ *    4. Set featured: true on the clip you want to spotlight in the hero banner.
+ *
+ * 🗑️ REMOVING A CLIP:
+ *    Delete the entry. The page handles an empty array gracefully.
+ *
+ * 🎬 PLAYLISTS:
+ *    Set NEXT_PUBLIC_YOUTUBE_CLIPS_PLAYLIST_ID in .env.local to embed the
+ *    full YouTube playlist directly on the page.
+ *    See app/config/youtube.ts for all available env vars.
+ * ============================================================================
+ */
+
 export const CLIPS: Clip[] = [
+  // ============================================================================
+  // PLACEHOLDER CLIPS — swap youtubeVideoId when the video is uploaded
+  // ============================================================================
   {
-    id: 'clip-1',
-    title: '1v4 Improbable Retake - VGL Grand Finals',
-    player: 'PhantomX',
-    playerTitle: 'TAG Vanguard Duelist',
+    id: 'clip-vgl-valorant-1',
+    title: '[Placeholder] Best VGL x Valorant Clutch: TBA',
+    player: 'TBA',
+    playerTitle: 'TAG Club Member',
     playerAvatar: '🎯',
     game: 'Valorant',
     gameIcon: '🎯',
     category: 'clutch',
-    duration: '0:48',
+    duration: 'TBA',
     date: 'FEB 2026',
-    views: '2.4K',
-    likes: 342,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', // Placeholder embed
+    views: 'TBA',
+    likes: 0,
+    youtubeVideoId: undefined, // ← paste the YouTube video ID here when available
     thumbnailGradient: 'from-rose-900/60 via-purple-950/80 to-black',
-    tags: ['Valorant', 'Clutch', 'Ascent', '1v4', 'VGL Finals'],
+    tags: ['Valorant', 'VGL', 'Clutch', 'Riviera 2026'],
     featured: true,
+    isPlaceholder: true,
     tournamentName: 'VGL Riviera 2026',
-    description: '1 HP and a dream. Pinpoint crosshair placement and utility usage turned an unwinnable round into the tournament championship point.',
+    description: 'Slot reserved for the best clutch play from the VGL x Valorant tournament at Riviera 2026. Video will be linked once uploaded to the TAG Club YouTube channel.',
   },
   {
-    id: 'clip-2',
-    title: 'Clean 5K Sheriff Ace on Eco Round',
-    player: 'Vortex_99',
-    playerTitle: 'Sharpshooter Elite',
-    playerAvatar: '⚡',
-    game: 'Valorant',
-    gameIcon: '🎯',
-    category: 'ace',
-    duration: '0:32',
-    date: 'FEB 2026',
-    views: '1.8K',
-    likes: 218,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-    thumbnailGradient: 'from-amber-900/60 via-stone-950/80 to-black',
-    tags: ['Valorant', 'Sheriff', 'Ace', 'Eco'],
-    featured: false,
-    description: 'No armor, five bullets, zero hesitation. Five consecutive headshots to completely flip the opponent economy.',
-  },
-  {
-    id: 'clip-3',
-    title: 'Final Circle 1v3 Solo Wipe for Chicken Dinner',
-    player: 'WraithHunter',
-    playerTitle: 'Survival Tactician',
+    id: 'clip-vgl-bgmi-1',
+    title: '[Placeholder] Highlight Reel — VGL x BGMI: TBA',
+    player: 'TBA',
+    playerTitle: 'TAG Club Member',
     playerAvatar: '🪖',
     game: 'BGMI',
     gameIcon: '💥',
-    category: 'clutch',
-    duration: '1:12',
-    date: 'FEB 2026',
-    views: '3.1K',
-    likes: 405,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-    thumbnailGradient: 'from-emerald-950/70 via-gray-950/80 to-black',
-    tags: ['BGMI', 'Solo-Squad', 'Zone 7', 'Dinner'],
-    featured: false,
-    tournamentName: 'TAG Battlegrounds Cup',
-    description: 'Patience in the grass and a laser spray transfer when the smoke dissipated. 1v3 victory in the final circle.',
-  },
-  {
-    id: 'clip-4',
-    title: 'Double Tap Flip Reset Goal in Overtime (+3:15)',
-    player: 'AeroGlide',
-    playerTitle: 'Aerial Wizard',
-    playerAvatar: '🚀',
-    game: 'Rocket League',
-    gameIcon: '🚗',
     category: 'highlight',
-    duration: '0:24',
-    date: 'JAN 2026',
-    views: '1.2K',
-    likes: 189,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-    thumbnailGradient: 'from-blue-950/70 via-indigo-950/80 to-black',
-    tags: ['Rocket League', 'Flip Reset', 'Overtime', 'Double Tap'],
+    duration: 'TBA',
+    date: 'FEB 2026',
+    views: 'TBA',
+    likes: 0,
+    youtubeVideoId: undefined,
+    thumbnailGradient: 'from-emerald-950/70 via-gray-950/80 to-black',
+    tags: ['BGMI', 'VGL', 'Highlight', 'Battle Royale'],
     featured: false,
-    description: 'Ceiling drop into an aerial flip reset backboard double tap to seal the sudden-death overtime match.',
+    isPlaceholder: true,
+    tournamentName: 'VGL Riviera 2026',
+    description: 'Slot reserved for the BGMI tournament highlights from Riviera 2026. Will be replaced with the actual YouTube clip once the video is processed and uploaded.',
   },
   {
-    id: 'clip-5',
-    title: '90th Minute Scorpion Kick Winner - FIFA League',
-    player: 'StrikerSam',
-    playerTitle: 'Virtual Maestro',
+    id: 'clip-vgl-fifa-1',
+    title: '[Placeholder] Match Highlight — VGL x FIFA: TBA',
+    player: 'TBA',
+    playerTitle: 'TAG Club Member',
     playerAvatar: '⚽',
     game: 'FIFA',
     gameIcon: '⚽',
     category: 'highlight',
-    duration: '0:35',
-    date: 'JAN 2026',
-    views: '980',
-    likes: 142,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
+    duration: 'TBA',
+    date: 'FEB 2026',
+    views: 'TBA',
+    likes: 0,
+    youtubeVideoId: undefined,
     thumbnailGradient: 'from-teal-950/70 via-black to-black',
-    tags: ['FIFA', 'Puskas', 'Scorpion Kick', '90th Min'],
+    tags: ['FIFA', 'VGL', 'Highlight', 'Campus Open'],
     featured: false,
+    isPlaceholder: true,
     tournamentName: 'VGL FIFA Campus Open',
-    description: 'Outrageous first-time cross converted via an acrobatic scorpion kick in the 93rd minute of injury time.',
-  },
-  {
-    id: 'clip-6',
-    title: 'When Smoke Grenades Betray Your Entire Squad',
-    player: 'OopsAllNades',
-    playerTitle: 'Guild Jester',
-    playerAvatar: '🤡',
-    game: 'Counter-Strike 2',
-    gameIcon: '💣',
-    category: 'funny',
-    duration: '0:28',
-    date: 'FEB 2026',
-    views: '4.5K',
-    likes: 670,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-    thumbnailGradient: 'from-yellow-950/60 via-stone-950 to-black',
-    tags: ['CS2', 'Fail', 'Smoke', 'Friendly Fire'],
-    featured: false,
-    description: 'A miscalculated bounce resulted in four flashed teammates and a rogue grenade that wiped the squad before the bomb planted.',
-  },
-  {
-    id: 'clip-7',
-    title: 'Perfect Parry into Rage Art Comeback (1% HP)',
-    player: 'IronFist',
-    playerTitle: 'Fighting Guild Veteran',
-    playerAvatar: '🥋',
-    game: 'Tekken 8',
-    gameIcon: '🥊',
-    category: 'clutch',
-    duration: '0:40',
-    date: 'FEB 2026',
-    views: '1.6K',
-    likes: 275,
-    videoEmbedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-    thumbnailGradient: 'from-red-950/70 via-zinc-950 to-black',
-    tags: ['Tekken 8', 'Low HP', 'Rage Art', 'Parry'],
-    featured: false,
-    description: 'Frame-perfect low parry followed by a maximum damage combo and Rage Art finish in tournament Top 8.',
+    description: 'Slot reserved for a standout match highlight from the VGL x FIFA tournament. Link the uploaded YouTube video by setting the youtubeVideoId field in app/data/clips.ts.',
   },
 ];
 
-export const CLIP_GAMES = ['All', 'Valorant', 'BGMI', 'Counter-Strike 2', 'Rocket League', 'FIFA', 'Tekken 8'];
+export const CLIP_GAMES = ['All', 'Valorant', 'BGMI', 'FIFA', 'Counter-Strike 2', 'Tekken 8', 'Rocket League'];
