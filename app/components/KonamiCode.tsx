@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useToast } from './Toast';
 import { playLevelUp } from './SoundEffects';
 
@@ -20,7 +20,7 @@ interface Particle {
 }
 
 export default function KonamiCode() {
-  const [sequence, setSequence] = useState<string[]>([]);
+  const sequenceRef = useRef<string[]>([]);
   const [activated, setActivated] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const { showToast } = useToast();
@@ -39,23 +39,23 @@ export default function KonamiCode() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if user is typing in an input
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+      // Don't intercept if user is typing in an input or textarea
+      const target = e.target as HTMLElement | null;
+      if (target && ['INPUT', 'TEXTAREA'].includes(target.tagName)) {
         return;
       }
 
-      setSequence(prev => {
-        const next = [...prev, e.key].slice(-KONAMI_CODE.length);
-        if (next.join(',').toLowerCase() === KONAMI_CODE.join(',').toLowerCase()) {
-          setActivated(true);
-          spawnParticles();
-          playLevelUp();
-          showToast('⚡ SECRET KONAMI CODE UNLOCKED! +9999 XP', { type: 'xp', icon: '🎮' });
-          setTimeout(() => setActivated(false), 3600);
-          return [];
-        }
-        return next;
-      });
+      // Update sequence in ref to avoid calling setState side-effects inside render phases
+      sequenceRef.current = [...sequenceRef.current, e.key].slice(-KONAMI_CODE.length);
+
+      if (sequenceRef.current.join(',').toLowerCase() === KONAMI_CODE.join(',').toLowerCase()) {
+        sequenceRef.current = [];
+        setActivated(true);
+        spawnParticles();
+        playLevelUp();
+        showToast('⚡ SECRET KONAMI CODE UNLOCKED! +9999 XP', { type: 'xp', icon: '🎮' });
+        setTimeout(() => setActivated(false), 3600);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
