@@ -9,6 +9,7 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useToast } from './Toast';
 import { playBlip, playSelect, isSoundEnabled, setSoundEnabled } from './SoundEffects';
+import { getAssetPath } from '../utils/asset';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -19,10 +20,11 @@ interface NavbarProps {
 }
 
 export default function Navbar({
-  logoUrl = '/TAG_Vector.svg',
+  logoUrl,
   logoAlt = 'TAG Club Logo',
   onOpenTerminal
 }: NavbarProps) {
+  const resolvedLogo = getAssetPath(logoUrl || '/TAG_Vector.svg');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [frame, setFrame] = useState(0);
@@ -104,7 +106,7 @@ export default function Navbar({
                   <div className="relative transition-all duration-300 group-hover:scale-110">
                     <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <Image
-                      src={logoUrl}
+                      src={resolvedLogo}
                       alt={logoAlt}
                       width={100}
                       height={100}

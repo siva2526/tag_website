@@ -262,7 +262,6 @@ export default function Home() {
       <PageBackground />
 
       <Navbar
-        logoUrl="/TAG_Vector.svg"
         logoAlt="TAG Club VIT Vellore"
         onOpenTerminal={() => setTerminalOpen(true)}
       />

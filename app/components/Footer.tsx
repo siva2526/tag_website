@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getAssetPath } from '../utils/asset';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,7 +13,7 @@ export default function Footer() {
             <div className="relative">
               <div className="absolute inset-0 bg-yellow-400/20 blur-md"></div>
               <Image
-                src="/TAG_Vector.svg"
+                src={getAssetPath('/TAG_Vector.svg')}
                 alt="TAG Logo"
                 width={80}
                 height={80}
