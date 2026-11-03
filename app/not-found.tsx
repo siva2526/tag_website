@@ -104,6 +104,13 @@ export default function NotFound() {
             VIEW QUEST BOARD
           </Link>
           <Link
+            href="/clips"
+            className="flex items-center gap-2 px-8 py-3 border-2 border-gray-700 text-gray-300 font-bold rounded-lg hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300"
+          >
+            <span>🎬</span>
+            REPLAY THEATER
+          </Link>
+          <Link
             href="/team"
             className="flex items-center gap-2 px-8 py-3 border-2 border-gray-700 text-gray-300 font-bold rounded-lg hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300"
           >

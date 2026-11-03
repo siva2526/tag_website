@@ -133,3 +133,4 @@ export function playLevelUp() {
     // Ignore audio error
   }
 }
+
