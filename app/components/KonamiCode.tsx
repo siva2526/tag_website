@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useToast } from './Toast';
+import { playLevelUp } from './SoundEffects';
 
 const KONAMI_CODE = [
   'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
@@ -48,6 +49,7 @@ export default function KonamiCode() {
         if (next.join(',').toLowerCase() === KONAMI_CODE.join(',').toLowerCase()) {
           setActivated(true);
           spawnParticles();
+          playLevelUp();
           showToast('⚡ SECRET KONAMI CODE UNLOCKED! +9999 XP', { type: 'xp', icon: '🎮' });
           setTimeout(() => setActivated(false), 3600);
           return [];

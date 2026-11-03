@@ -175,3 +175,4 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
     </div>
   );
 }
+

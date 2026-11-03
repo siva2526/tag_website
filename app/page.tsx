@@ -17,6 +17,7 @@ import Footer from './components/Footer';
 import PageBackground from './components/PageBackground';
 import SecretTerminal from './components/SecretTerminal';
 import ProTipTicker from './components/ProTipTicker';
+import { playBlip, playSelect } from './components/SoundEffects';
 import { events as allEvents } from './data/events';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
@@ -302,7 +303,10 @@ export default function Home() {
                 <div className="text-xs text-gray-500 mb-3 font-mono"> &gt; SELECT YOUR CLASS</div>
                 <div className="flex gap-4">
                   <button
-                    onClick={() => setSelectedClass('tech')}
+                    onClick={() => {
+                      playSelect();
+                      setSelectedClass('tech');
+                    }}
                     className={`relative flex-1 p-5 border-2 rounded-xl transition-all duration-300 group ${
                       selectedClass === 'tech'
                         ? 'border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20'
@@ -321,7 +325,10 @@ export default function Home() {
                   </button>
 
                   <button
-                    onClick={() => setSelectedClass('gaming')}
+                    onClick={() => {
+                      playSelect();
+                      setSelectedClass('gaming');
+                    }}
                     className={`relative flex-1 p-5 border-2 rounded-xl transition-all duration-300 group ${
                       selectedClass === 'gaming'
                         ? 'border-green-500 bg-green-500/10 shadow-lg shadow-green-500/20'

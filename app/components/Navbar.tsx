@@ -8,6 +8,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useToast } from './Toast';
+import { playBlip, playSelect, isSoundEnabled, setSoundEnabled } from './SoundEffects';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -26,11 +27,13 @@ export default function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [frame, setFrame] = useState(0);
   const [clickCount, setClickCount] = useState(0);
+  const [sfxOn, setSfxOn] = useState(true);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { showToast } = useToast();
 
   useEffect(() => {
+    setSfxOn(isSoundEnabled());
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -46,7 +49,8 @@ export default function Navbar({
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogoClick = (e: React.MouseEvent) => {
+  const handleLogoClick = () => {
+    playBlip();
     const next = clickCount + 1;
     setClickCount(next);
 
@@ -61,6 +65,17 @@ export default function Navbar({
       showToast('🏆 GUILD MASTER BADGE UNLOCKED! Secret Member XP +5000', { type: 'success', icon: '👑' });
       setClickCount(0);
     }
+  };
+
+  const toggleSound = () => {
+    const next = !sfxOn;
+    setSfxOn(next);
+    setSoundEnabled(next);
+    if (next) playBlip();
+    showToast(next ? '🔊 Retro SFX: ENABLED' : '🔇 Retro SFX: MUTED', {
+      type: 'info',
+      icon: next ? '🔊' : '🔇',
+    });
   };
 
   const characterFrames = ['◐', '◓', '◑', '◒'];
@@ -78,7 +93,7 @@ export default function Navbar({
           ? 'bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 py-3'
           : 'bg-black/90 backdrop-blur-sm py-5'
       }`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center">
@@ -107,11 +122,12 @@ export default function Navbar({
             </div>
 
             {/* Desktop Navigation Links - Game Menu */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-7">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
+                  onClick={() => playSelect()}
                   className="text-gray-300 hover:text-yellow-400 transition-colors duration-300 font-bold text-sm tracking-wide relative group"
                 >
                   <span className="relative">
@@ -121,14 +137,29 @@ export default function Navbar({
                 </Link>
               ))}
 
+              {/* Sound FX Audio Toggle */}
+              <button
+                onClick={toggleSound}
+                className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-lg border transition-all ${
+                  sfxOn
+                    ? 'border-yellow-400/40 text-yellow-400 bg-yellow-400/10 hover:border-yellow-400'
+                    : 'border-gray-800 text-gray-500 bg-gray-900/50 hover:text-gray-300'
+                }`}
+                title={sfxOn ? 'Mute Retro SFX' : 'Enable Retro SFX'}
+              >
+                <span>{sfxOn ? '🔊' : '🔇'}</span>
+                <span className="hidden xl:inline">{sfxOn ? 'SFX: ON' : 'SFX: OFF'}</span>
+              </button>
+
               {/* Active Player Indicator */}
               <div
                 onClick={() => {
+                  playBlip();
                   if (onOpenTerminal) onOpenTerminal();
                   else showToast('⚔️ Player Status: Guild Champion • Online', { type: 'info', icon: '🛡️' });
                 }}
-                className="flex items-center gap-2 ml-4 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg cursor-pointer hover:border-yellow-400/60 transition-colors"
-                title="Click for Guild Status"
+                className="flex items-center gap-2 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg cursor-pointer hover:border-yellow-400/60 transition-colors"
+                title="Click for Guild Status / Secret Terminal"
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-gray-400 font-mono">LVL.42</span>
@@ -136,20 +167,34 @@ export default function Navbar({
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {/* Desktop CTA Button */}
               <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                 <button
-                  className="hidden lg:flex items-center gap-2 px-6 py-2.5 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-400/25"
+                  onClick={() => playSelect()}
+                  className="hidden sm:flex items-center gap-2 px-5 py-2 bg-yellow-400 text-black font-bold text-xs md:text-sm rounded-lg hover:bg-yellow-300 transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-400/25"
                 >
                   <span>🎮</span>
                   JOIN DISCORD
                 </button>
               </a>
+
+              {/* Mobile SFX Toggle */}
+              <button
+                onClick={toggleSound}
+                className="lg:hidden p-2 rounded-lg bg-gray-900 border border-gray-800 text-xs"
+                title="Toggle SFX"
+              >
+                {sfxOn ? '🔊' : '🔇'}
+              </button>
+
               {/* Mobile Menu Toggle */}
               <button
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                onClick={() => {
+                  playBlip();
+                  setMobileMenuOpen(!mobileMenuOpen);
+                }}
                 aria-label="Toggle navigation menu"
               >
                 <svg
@@ -178,7 +223,10 @@ export default function Navbar({
                   key={link.name}
                   href={link.href}
                   className="block py-3 text-gray-300 hover:text-yellow-400 transition-colors text-lg font-bold border-b border-gray-800 last:border-b-0"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    playSelect();
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   {link.name}
                 </Link>
@@ -186,7 +234,10 @@ export default function Navbar({
               {/* DISCORD BUTTON */}
               <div className="pt-4">
                 <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
-                  <button className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-colors">
+                  <button
+                    onClick={() => playSelect()}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-colors"
+                  >
                     <span>🎮</span>
                     JOIN DISCORD
                   </button>

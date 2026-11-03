@@ -10,6 +10,7 @@ import KonamiCode from './components/KonamiCode';
 import CursorTrail from './components/CursorTrail';
 import ScrollProgress from './components/ScrollProgress';
 import AFKDetector from './components/AFKDetector';
+import BackToTop from './components/BackToTop';
 import { ToastProvider } from './components/Toast';
 
 config.autoAddCss = false;
@@ -46,6 +47,7 @@ export default function RootLayout({
           <KonamiCode />
           <CursorTrail />
           <AFKDetector />
+          <BackToTop />
           {children}
         </ToastProvider>
       </body>

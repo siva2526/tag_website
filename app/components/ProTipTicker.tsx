@@ -44,3 +44,4 @@ export default function ProTipTicker({ onOpenTerminal }: { onOpenTerminal?: () =
     </div>
   );
 }
+
