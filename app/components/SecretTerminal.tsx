@@ -20,7 +20,7 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
   const [input, setInput] = useState('');
   const [logs, setLogs] = useState<CommandLog[]>([
     { id: 1, text: 'TAG GUILD TERMINAL v4.2.0 [VIT-01]', type: 'success' },
-    { id: 2, text: 'Type "help" to see available guild directives, or "sudo join tag" to enlist.', type: 'output' },
+    { id: 2, text: 'Type "help" to see available directives, or "sudo join tag" to enlist.', type: 'output' },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -170,35 +170,35 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="w-full max-w-2xl bg-black border-2 border-yellow-400 rounded-xl overflow-hidden shadow-2xl shadow-yellow-400/20 font-mono text-sm">
+    <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl">
+      <div className="w-full max-w-2xl bg-[#0c0c12] border-2 border-yellow-400 rounded-2xl overflow-hidden shadow-[6px_6px_0px_0px_#fff400] font-mono text-sm">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-gray-900 border-b border-gray-800">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 bg-zinc-900/80 border-b border-white/[0.08]">
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="w-7 h-7 flex items-center justify-center -ml-1 rounded hover:bg-gray-800 transition-colors"
+              className="w-7 h-7 flex items-center justify-center -ml-1 rounded hover:bg-zinc-800 transition-colors"
               aria-label="Close terminal"
             >
               <span className="w-3 h-3 bg-red-500 rounded-full inline-block" />
             </button>
             <span className="w-3 h-3 bg-yellow-500 rounded-full inline-block" />
             <span className="w-3 h-3 bg-green-500 rounded-full inline-block" />
-            <span className="ml-2 text-xs text-gray-400 font-mono truncate max-w-[140px] sm:max-w-none">
+            <span className="ml-2 text-xs text-zinc-400 font-mono truncate max-w-[140px] sm:max-w-none">
               guild-shell ~ (bash)
             </span>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-yellow-400 transition-colors text-xs font-bold px-3 py-2 min-h-[40px] flex items-center justify-center"
+            className="text-zinc-400 hover:text-yellow-400 transition-colors text-xs font-bold px-3 py-1.5 min-h-[36px] flex items-center justify-center"
             aria-label="Close terminal"
           >
-            [ESC / ✕]
+            ESC ✕
           </button>
         </div>
 
         {/* Terminal Body */}
-        <div className="p-4 sm:p-5 max-h-[50vh] sm:max-h-[380px] overflow-y-auto space-y-2 select-text">
+        <div className="p-4 sm:p-5 max-h-[50vh] sm:max-h-[380px] overflow-y-auto space-y-2 select-text bg-zinc-950/50">
           {logs.map(log => (
             <div
               key={log.id}
@@ -206,10 +206,10 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
                 log.type === 'input'
                   ? 'text-yellow-400 font-bold'
                   : log.type === 'success'
-                  ? 'text-green-400'
+                  ? 'text-emerald-400'
                   : log.type === 'error'
-                  ? 'text-red-400'
-                  : 'text-gray-300'
+                  ? 'text-rose-400'
+                  : 'text-zinc-300'
               }`}
             >
               {log.text}
@@ -219,7 +219,7 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
         </div>
 
         {/* Command Input Form */}
-        <form onSubmit={handleCommand} className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-950 border-t border-gray-800">
+        <form onSubmit={handleCommand} className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-zinc-900/80 border-t border-white/[0.08]">
           <span className="text-yellow-400 font-bold">&gt;</span>
           <input
             ref={inputRef}
@@ -227,11 +227,11 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="type 'sudo join tag' or 'help'..."
-            className="flex-1 bg-transparent text-white font-mono outline-none text-xs sm:text-sm placeholder:text-gray-600 min-h-[40px]"
+            className="flex-1 bg-transparent text-white font-mono outline-none text-xs sm:text-sm placeholder:text-zinc-600 min-h-[38px]"
           />
           <button
             type="submit"
-            className="text-xs text-yellow-400 hover:text-yellow-300 font-bold px-3 py-2 min-h-[40px] bg-yellow-400/10 rounded-lg border border-yellow-400/30 transition-colors shrink-0"
+            className="text-xs text-yellow-400 hover:text-yellow-300 font-bold px-3 py-1.5 min-h-[36px] bg-yellow-400/10 rounded-lg border border-yellow-400/30 transition-colors shrink-0"
           >
             EXECUTE
           </button>
@@ -240,4 +240,3 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
     </div>
   );
 }
-

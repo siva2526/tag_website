@@ -11,6 +11,7 @@ import { useToast } from './Toast';
 import { playBlip, playSelect, isSoundEnabled, setSoundEnabled } from './SoundEffects';
 import { getAssetPath } from '../utils/asset';
 import { openCommandPalette } from './CommandPalette';
+import { recordInteraction } from './EasterEggs';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -44,11 +45,11 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Character animation
+  // Character HUD animation
   useEffect(() => {
     const interval = setInterval(() => {
       setFrame(prev => (prev + 1) % 4);
-    }, 200);
+    }, 250);
     return () => clearInterval(interval);
   }, []);
 
@@ -63,7 +64,8 @@ export default function Navbar({
     }, 2500);
 
     if (next === 5) {
-      showToast('⚡ SPEEDRUN COMBO x5! Guild Agility +10', { type: 'xp', icon: '⚡' });
+      recordInteraction('logo');
+      showToast('⚡ SANDEVISTAN SPEEDRUN ENGAGED! Time-Dilation Active', { type: 'xp', icon: '⚡' });
     } else if (next === 10) {
       showToast('🏆 GUILD MASTER BADGE UNLOCKED! Secret Member XP +5000', { type: 'success', icon: '👑' });
       setClickCount(0);
@@ -75,7 +77,7 @@ export default function Navbar({
     setSfxOn(next);
     setSoundEnabled(next);
     if (next) playBlip();
-    showToast(next ? '🔊 Retro SFX: ENABLED' : '🔇 Retro SFX: MUTED', {
+    showToast(next ? '🔊 Tactical SFX: ONLINE' : '🔇 Tactical SFX: MUTED', {
       type: 'info',
       icon: next ? '🔊' : '🔇',
     });
@@ -91,92 +93,99 @@ export default function Navbar({
 
   return (
     <>
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 py-2 sm:py-3'
-          : 'bg-black/90 backdrop-blur-sm py-3 sm:py-5'
-      }`}>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-[#08080c]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-2 sm:py-2.5'
+            : 'bg-[#08080c]/60 backdrop-blur-md border-b border-white/[0.04] py-3 sm:py-4'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center">
               <div onClick={handleLogoClick} className="cursor-pointer">
                 <Link href="/" className="flex items-center gap-3 group">
-                  {/* Logo Image with Responsive Sizing & Game HUD Effect */}
-                  <div className="relative transition-all duration-300 group-hover:scale-105 w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative transition-all duration-300 group-hover:scale-105 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full" />
                     <Image
                       src={resolvedLogo}
                       alt={logoAlt}
-                      width={80}
-                      height={80}
-                      className="object-contain relative z-10 max-h-full max-w-full"
+                      width={56}
+                      height={56}
+                      className="object-contain relative z-10 max-h-full max-w-full drop-shadow-[0_0_12px_rgba(255,244,0,0.3)]"
                       priority
                     />
                   </div>
-                  {/* Player Tag */}
-                  <div className="hidden md:block">
-                    <span className="text-xs text-gray-500 font-mono group-hover:text-yellow-400 transition-colors">
-                      [GUILD_MASTER]
+                  <div className="hidden sm:flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold tracking-tight text-white text-base">TAG</span>
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-yellow-400/15 text-yellow-400 border border-yellow-400/30">
+                        COLLECTIVE
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-zinc-400 tracking-wider font-mono">
+                      TECH // GAMING
                     </span>
                   </div>
                 </Link>
               </div>
             </div>
 
-            {/* Desktop Navigation Links - Game Menu */}
-            <div className="hidden lg:flex items-center gap-7">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => playSelect()}
-                  className="text-gray-300 hover:text-yellow-400 transition-colors duration-300 font-bold text-sm tracking-wide relative group"
-                >
-                  <span className="relative">
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center gap-6">
+              <div className="flex items-center gap-1 bg-zinc-900/40 p-1 rounded-full border border-white/[0.06]">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => playSelect()}
+                    className="text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-all px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+                  >
                     {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-                  </span>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
 
               {/* Command Palette Button */}
               <button
                 onClick={() => openCommandPalette()}
-                className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-lg border border-gray-800 text-gray-400 bg-gray-900/60 hover:border-yellow-400/60 hover:text-yellow-400 transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono rounded-lg border border-white/[0.08] text-zinc-400 bg-zinc-900/60 hover:border-yellow-400/50 hover:text-yellow-400 transition-all hover:shadow-[0_0_15px_rgba(255,244,0,0.1)]"
                 title="Open Command Palette (Ctrl+K / Cmd+K)"
               >
-                <span>🔍</span>
-                <span className="text-[11px] text-gray-500 font-bold">⌘K</span>
+                <span className="text-zinc-500">⌘</span>
+                <span className="font-sans text-xs">Search</span>
+                <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800/80 text-zinc-400 border border-zinc-700/60">
+                  Ctrl+K
+                </kbd>
               </button>
 
               {/* Sound FX Audio Toggle */}
               <button
                 onClick={toggleSound}
-                className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-lg border transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono rounded-lg border transition-all ${
                   sfxOn
-                    ? 'border-yellow-400/40 text-yellow-400 bg-yellow-400/10 hover:border-yellow-400'
-                    : 'border-gray-800 text-gray-500 bg-gray-900/50 hover:text-gray-300'
+                    ? 'border-yellow-400/40 text-yellow-400 bg-yellow-400/10 hover:border-yellow-400 shadow-[0_0_10px_rgba(255,244,0,0.15)]'
+                    : 'border-white/[0.08] text-zinc-500 bg-zinc-900/40 hover:text-zinc-300'
                 }`}
-                title={sfxOn ? 'Mute Retro SFX' : 'Enable Retro SFX'}
+                title={sfxOn ? 'Mute Audio SFX' : 'Enable Audio SFX'}
               >
                 <span>{sfxOn ? '🔊' : '🔇'}</span>
-                <span className="hidden xl:inline">{sfxOn ? 'SFX: ON' : 'SFX: OFF'}</span>
+                <span className="text-[11px] font-bold">{sfxOn ? 'SFX' : 'MUTED'}</span>
               </button>
 
-              {/* Active Player Indicator */}
+              {/* Active Player HUD Indicator */}
               <div
                 onClick={() => {
                   playBlip();
                   if (onOpenTerminal) onOpenTerminal();
-                  else showToast('⚔️ Player Status: Guild Champion • Online', { type: 'info', icon: '🛡️' });
+                  else showToast('⚡ Telemetry: Server Node VIT-01 • All Systems Nominal', { type: 'info', icon: '📡' });
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 bg-gray-900/80 border border-gray-800 rounded-lg cursor-pointer hover:border-yellow-400/60 transition-colors"
-                title="Click for Guild Status / Secret Terminal"
+                className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900/60 border border-white/[0.08] rounded-lg cursor-pointer hover:border-cyan-400/50 transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.15)] group"
+                title="Click for Guild Telemetry / Secret Terminal"
               >
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-gray-400 font-mono">LVL.42</span>
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34d399]" />
+                <span className="text-[11px] text-zinc-400 font-mono group-hover:text-cyan-400 transition-colors">LVL.42</span>
                 <span className="text-xs text-yellow-400 font-mono">{characterFrames[frame]}</span>
               </div>
             </div>
@@ -186,36 +195,36 @@ export default function Navbar({
               <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                 <button
                   onClick={() => playSelect()}
-                  className="hidden sm:flex items-center gap-2 px-5 py-2 bg-yellow-400 text-black font-bold text-xs md:text-sm rounded-lg hover:bg-yellow-300 transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-400/25"
+                  className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black font-extrabold text-xs tracking-wider border-2 border-black rounded-lg shadow-[3px_3px_0px_0px_#ffffff] hover:shadow-[4px_4px_0px_0px_#ffffff] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                 >
-                  <span>🎮</span>
-                  JOIN DISCORD
+                  <FontAwesomeIcon icon={['fab', 'discord']} className="text-sm" />
+                  <span>JOIN DISCORD</span>
                 </button>
               </a>
 
               {/* Mobile Search / Palette Toggle */}
               <button
                 onClick={() => openCommandPalette()}
-                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-gray-900 border border-gray-800 text-sm hover:border-yellow-400/60 transition-colors text-gray-300"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-zinc-900/80 border border-white/[0.08] text-sm hover:border-yellow-400/50 transition-colors text-zinc-300"
                 title="Search / Command Palette"
                 aria-label="Open Command Palette"
               >
                 🔍
               </button>
 
-              {/* Mobile SFX Toggle with 44px hit target */}
+              {/* Mobile SFX Toggle */}
               <button
                 onClick={toggleSound}
-                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-gray-900 border border-gray-800 text-sm hover:border-yellow-400/60 transition-colors"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-zinc-900/80 border border-white/[0.08] text-sm hover:border-yellow-400/50 transition-colors"
                 title="Toggle SFX"
                 aria-label="Toggle sound effects"
               >
                 {sfxOn ? '🔊' : '🔇'}
               </button>
 
-              {/* Mobile Menu Toggle with 44px hit target */}
+              {/* Mobile Menu Toggle */}
               <button
-                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors border border-white/[0.08]"
                 onClick={() => {
                   playBlip();
                   setMobileMenuOpen(!mobileMenuOpen);
@@ -223,7 +232,7 @@ export default function Navbar({
                 aria-label="Toggle navigation menu"
               >
                 <svg
-                  className="w-6 h-6 text-gray-300"
+                  className="w-5 h-5 text-zinc-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -239,15 +248,15 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 animate-in slide-in-from-top duration-300 shadow-2xl">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-[#08080c]/95 backdrop-blur-2xl border-b border-white/[0.08] animate-in slide-in-from-top duration-300 shadow-2xl">
             <div className="px-5 py-6 space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="block py-3 px-2 text-gray-300 hover:text-yellow-400 transition-colors text-base font-bold border-b border-gray-800 last:border-b-0 min-h-[44px] flex items-center"
+                  className="block py-3 px-3 text-zinc-200 hover:text-yellow-400 hover:bg-white/[0.04] rounded-lg transition-colors text-sm font-semibold border-b border-white/[0.04] last:border-b-0 min-h-[44px] flex items-center"
                   onClick={() => {
                     playSelect();
                     setMobileMenuOpen(false);
@@ -256,30 +265,29 @@ export default function Navbar({
                   {link.name}
                 </Link>
               ))}
-              {/* Mobile Command Palette Launcher */}
+
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   openCommandPalette();
                 }}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-gray-800 bg-gray-900/80 text-gray-300 hover:text-yellow-400 text-sm font-bold min-h-[44px]"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/[0.08] bg-zinc-900/80 text-zinc-300 hover:text-yellow-400 text-sm font-medium min-h-[44px]"
               >
                 <span className="flex items-center gap-2">
-                  <span>🔍</span> Command Palette &amp; Cheats
+                  <span>🔍</span> Command Palette
                 </span>
-                <kbd className="text-[10px] bg-black px-2 py-0.5 rounded text-gray-500 border border-gray-800">
+                <kbd className="text-[10px] bg-black px-2 py-0.5 rounded text-zinc-400 border border-white/10 font-mono">
                   Ctrl+K
                 </kbd>
               </button>
 
-              {/* DISCORD BUTTON */}
-              <div className="pt-3">
+              <div className="pt-2">
                 <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                   <button
                     onClick={() => playSelect()}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-yellow-400 text-black font-bold text-sm rounded-xl hover:bg-yellow-300 transition-colors min-h-[44px]"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold text-sm rounded-lg hover:bg-yellow-300 transition-colors min-h-[44px] shadow-[0_0_15px_rgba(255,244,0,0.25)]"
                   >
-                    <span>🎮</span>
+                    <FontAwesomeIcon icon={['fab', 'discord']} />
                     JOIN DISCORD
                   </button>
                 </a>
@@ -290,7 +298,7 @@ export default function Navbar({
       </nav>
 
       {/* Spacer to match responsive navbar height */}
-      <div className="h-20 sm:h-24" />
+      <div className="h-16 sm:h-20" />
     </>
   );
 }

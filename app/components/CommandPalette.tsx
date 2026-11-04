@@ -8,13 +8,13 @@ import { CLIPS } from '../data/clips';
 import { YOUTUBE_CONFIG } from '../config/youtube';
 import { playBlip, playSelect, playPowerUp, isSoundEnabled, setSoundEnabled } from './SoundEffects';
 import { useToast } from './Toast';
-import { triggerEasterEgg, EasterEggType } from './EasterEggs';
+import { ACHIEVEMENTS, getUnlockedAchievements } from './EasterEggs';
 
 interface CommandItem {
   id: string;
   title: string;
   subtitle?: string;
-  category: 'Navigation' | 'Quests & Events' | 'Officers & Dossiers' | 'Clips & Plays' | 'Settings & Audio' | '🎮 Modern Game Cheats';
+  category: 'Navigation' | 'Quests & Events' | 'Officers & Dossiers' | 'Clips & Plays' | 'Settings & Guild';
   icon: string;
   action: () => void;
   keywords?: string[];
@@ -31,19 +31,27 @@ export default function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [showAchievementsModal, setShowAchievementsModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { showToast } = useToast();
 
-  // Listen for Ctrl+K, Cmd+K, or custom event
+  const unlockedAchievements = useMemo(() => {
+    return typeof window !== 'undefined' ? getUnlockedAchievements() : [];
+  }, [isOpen, showAchievementsModal]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsOpen((prev) => !prev);
-      } else if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+      } else if (e.key === 'Escape') {
+        if (showAchievementsModal) {
+          setShowAchievementsModal(false);
+        } else if (isOpen) {
+          setIsOpen(false);
+        }
       }
     };
 
@@ -57,9 +65,8 @@ export default function CommandPalette() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('open-command-palette', handleOpen);
     };
-  }, [isOpen]);
+  }, [isOpen, showAchievementsModal]);
 
-  // Focus input and reset selection on open
   useEffect(() => {
     if (isOpen) {
       playSelect();
@@ -69,7 +76,6 @@ export default function CommandPalette() {
     }
   }, [isOpen]);
 
-  // Extract unique active officers from latest seasons
   const officersList = useMemo(() => {
     const list: { name: string; position: string; year: string; class: string }[] = [];
     seasons.forEach((season) => {
@@ -87,276 +93,178 @@ export default function CommandPalette() {
     return list;
   }, []);
 
-  // Construct master command list
   const allCommands = useMemo<CommandItem[]>(() => {
     const items: CommandItem[] = [
-      // ─────────────────────────────────────────────────────────────
       // NAVIGATION
-      // ─────────────────────────────────────────────────────────────
       {
         id: 'nav-home',
         title: 'Home Lobby',
-        subtitle: 'Return to main lobby and class selection',
+        subtitle: 'Return to main lobby and archetype selector',
         category: 'Navigation',
         icon: '🏠',
-        keywords: ['home', 'lobby', 'main', 'start'],
+        keywords: ['lobby', 'home', 'landing', 'start', 'main'],
         action: () => router.push('/'),
       },
       {
         id: 'nav-events',
-        title: 'Quest Board // Events',
-        subtitle: 'Browse tactical tournaments and hackathons',
+        title: 'Quest Board (Events)',
+        subtitle: 'Explore competitive tournaments, game jams & hackathons',
         category: 'Navigation',
-        icon: '⚔️',
-        keywords: ['events', 'tournaments', 'quests', 'workshops', 'vgl'],
+        icon: '📋',
+        keywords: ['events', 'quests', 'tournaments', 'jams', 'hackathons'],
+        badge: `${events.length} Quests`,
         action: () => router.push('/events'),
       },
       {
         id: 'nav-clips',
-        title: 'Replay Cinema // Clips',
-        subtitle: 'Watch member clutches, aces, and YouTube playlist',
+        title: 'Replay Cinema (Clips)',
+        subtitle: 'Watch clutches, tournament highlights & YouTube plays',
         category: 'Navigation',
         icon: '🎬',
-        keywords: ['clips', 'videos', 'youtube', 'highlights', 'cinema'],
+        keywords: ['clips', 'replays', 'youtube', 'vods', 'highlights', 'videos'],
+        badge: `${CLIPS.length} Clips`,
         action: () => router.push('/clips'),
       },
       {
         id: 'nav-team',
-        title: 'Board of Officers // Team',
-        subtitle: 'Explore 7 seasons of TAG leadership dossiers',
+        title: 'Board Chronicle (Team)',
+        subtitle: `Browse council officers and all ${seasons.length} seasons of archives`,
         category: 'Navigation',
-        icon: '📜',
-        keywords: ['team', 'officers', 'board', 'seasons', 'members', 'president'],
+        icon: '🛡️',
+        keywords: ['team', 'council', 'board', 'members', 'officers', 'seasons', 'legacy'],
+        badge: `${seasons.length} Seasons`,
         action: () => router.push('/team'),
       },
       {
-        id: 'nav-pillars',
-        title: 'Guild Pillars',
-        subtitle: 'Technology (Dev) & Gaming (Esports) divisions',
+        id: 'nav-discord',
+        title: 'Join Discord Guild',
+        subtitle: 'Direct jump to the official TAG Club Discord server',
         category: 'Navigation',
-        icon: '⚡',
-        keywords: ['pillars', 'tech', 'gaming', 'classes'],
-        action: () => router.push('/#about'),
+        icon: '🎮',
+        keywords: ['discord', 'chat', 'server', 'community', 'join'],
+        badge: 'External ↗',
+        action: () => window.open('https://discord.com/invite/Y9cpqdvZE4', '_blank'),
+      },
+      {
+        id: 'nav-youtube-channel',
+        title: 'TAG YouTube Channel',
+        subtitle: 'Watch official highlights and tournament streams',
+        category: 'Navigation',
+        icon: '▶',
+        keywords: ['youtube', 'channel', 'stream', 'broadcast', 'vod'],
+        badge: 'External ↗',
+        action: () => window.open(YOUTUBE_CONFIG.channelUrl, '_blank'),
       },
 
-      // ─────────────────────────────────────────────────────────────
-      // MODERN GAME CHEATS & EASTER EGGS
-      // ─────────────────────────────────────────────────────────────
+      // SETTINGS & GUILD
       {
-        id: 'egg-eldenring',
-        title: 'Elden Ring: "YOU DIED"',
-        subtitle: 'Trigger the legendary crimson death screen & lose 50,000 runes',
-        category: '🎮 Modern Game Cheats',
-        icon: '⚔️',
-        badge: 'ELDEN RING',
-        keywords: ['elden', 'ring', 'you died', 'souls', 'death', 'dark souls', 'malenia'],
-        action: () => triggerEasterEgg('eldenring'),
+        id: 'guild-achievements',
+        title: 'Guild Achievements Logbook',
+        subtitle: `${unlockedAchievements.length} of ${ACHIEVEMENTS.length} secret easter eggs discovered through interactions`,
+        category: 'Settings & Guild',
+        icon: '🏆',
+        keywords: ['achievements', 'secrets', 'easter eggs', 'trophies', 'how did we get here', 'diamonds', '500kg'],
+        badge: `${unlockedAchievements.length}/${ACHIEVEMENTS.length} Found`,
+        action: () => setShowAchievementsModal(true),
       },
       {
-        id: 'egg-helldivers',
-        title: 'Helldivers 2: Call in 500KG Bomb',
-        subtitle: 'Input stratagem combo ↑ → ↓ ↓ ↓ for orbital democracy delivery',
-        category: '🎮 Modern Game Cheats',
-        icon: '🚀',
-        badge: 'HELLDIVERS',
-        keywords: ['helldivers', '500kg', 'bomb', 'stratagem', 'democracy', 'super earth'],
-        action: () => triggerEasterEgg('helldivers'),
-      },
-      {
-        id: 'egg-valorant',
-        title: 'Valorant: Trigger 5K Ace Banner',
-        subtitle: 'Hear the ascending ace kill fanfare and skull banner',
-        category: '🎮 Modern Game Cheats',
-        icon: '👑',
-        badge: 'VALORANT',
-        keywords: ['valorant', 'ace', 'clutch', '5k', 'riot', 'jett'],
-        action: () => triggerEasterEgg('valorant'),
-      },
-      {
-        id: 'egg-gacha',
-        title: 'Genshin / Star Rail: 5-Star Wish Pull',
-        subtitle: 'Golden shooting star & SSR character card acquisition',
-        category: '🎮 Modern Game Cheats',
-        icon: '✨',
-        badge: 'GACHA',
-        keywords: ['gacha', 'genshin', 'wish', 'star rail', 'pull', 'ssr', '5 star'],
-        action: () => triggerEasterEgg('gacha'),
-      },
-      {
-        id: 'egg-sandevistan',
-        title: 'Cyberpunk 2077: Militech Sandevistan',
-        subtitle: 'Overclock neural reflexes with 200% time-dilation',
-        category: '🎮 Modern Game Cheats',
-        icon: '⚡',
-        badge: 'CYBERPUNK',
-        keywords: ['sandevistan', 'cyberpunk', 'edgerunners', 'david', 'slow mo', 'sandy'],
-        action: () => triggerEasterEgg('sandevistan'),
-      },
-      {
-        id: 'egg-minecraft',
-        title: 'Minecraft: Unlock "Diamonds!" Advancement',
-        subtitle: 'Pop down the classic retro achievement banner',
-        category: '🎮 Modern Game Cheats',
-        icon: '💎',
-        badge: 'MINECRAFT',
-        keywords: ['minecraft', 'advancement', 'achievement', 'diamonds'],
-        action: () => triggerEasterEgg('minecraft'),
-      },
-      {
-        id: 'egg-konami',
-        title: 'Konami Code: +9,999 XP Gold Coin Shower',
-        subtitle: 'Trigger the floating 8-bit gold coins and level up fanfare',
-        category: '🎮 Modern Game Cheats',
-        icon: '🪙',
-        badge: 'RETRO',
-        keywords: ['konami', 'cheat', 'coins', 'level up', 'xp'],
-        action: () => triggerEasterEgg('konami'),
-      },
-      {
-        id: 'egg-d20',
-        title: 'Roll a D20 (Dungeons & Dragons)',
-        subtitle: 'Roll a twenty-sided die for an initiative check',
-        category: '🎮 Modern Game Cheats',
-        icon: '🎲',
-        badge: 'D&D',
-        keywords: ['d20', 'dice', 'roll', 'dnd', 'critical'],
-        action: () => {
-          const roll = Math.floor(Math.random() * 20) + 1;
-          if (roll === 20) {
-            playPowerUp();
-            showToast('🎲 NATURAL 20! Critical Hit! Maximum guild damage dealt.', { type: 'xp', icon: '🔥' });
-          } else if (roll === 1) {
-            playBlip();
-            showToast('🎲 NATURAL 1! Critical Miss! You dropped your weapon.', { type: 'warning', icon: '💀' });
-          } else {
-            playBlip();
-            showToast(`🎲 D20 Roll: You rolled a ${roll}! Check passed.`, { type: 'info', icon: '🎲' });
-          }
-        },
-      },
-
-      // ─────────────────────────────────────────────────────────────
-      // SETTINGS & AUDIO
-      // ─────────────────────────────────────────────────────────────
-      {
-        id: 'util-sound',
-        title: isSoundEnabled() ? 'Mute Retro Sound FX' : 'Enable Retro Sound FX',
-        subtitle: 'Toggle 8-bit audio blips and fanfares',
-        category: 'Settings & Audio',
+        id: 'set-sfx-toggle',
+        title: 'Toggle Retro Audio SFX',
+        subtitle: isSoundEnabled() ? 'Currently: ENABLED (Click to Mute)' : 'Currently: MUTED (Click to Enable)',
+        category: 'Settings & Guild',
         icon: isSoundEnabled() ? '🔊' : '🔇',
-        keywords: ['sound', 'audio', 'mute', 'sfx', 'music'],
+        keywords: ['sound', 'audio', 'sfx', 'mute', 'volume'],
+        badge: isSoundEnabled() ? 'ON' : 'OFF',
         action: () => {
           const next = !isSoundEnabled();
           setSoundEnabled(next);
           if (next) playBlip();
-          showToast(next ? '🔊 Retro SFX: ENABLED' : '🔇 Retro SFX: MUTED', {
+          showToast(next ? '🔊 Audio SFX Enabled' : '🔇 Audio SFX Muted', {
             type: 'info',
             icon: next ? '🔊' : '🔇',
           });
         },
       },
       {
-        id: 'util-discord',
-        title: 'Copy Discord Invite URL',
-        subtitle: 'https://discord.com/invite/Y9cpqdvZE4',
-        category: 'Settings & Audio',
-        icon: '💬',
-        keywords: ['discord', 'invite', 'join', 'server', 'chat'],
+        id: 'set-copy-link',
+        title: 'Share Website Link',
+        subtitle: 'Copy URL to clipboard to invite peers to TAG Club',
+        category: 'Settings & Guild',
+        icon: '🔗',
+        keywords: ['share', 'copy', 'url', 'invite'],
         action: () => {
-          navigator.clipboard.writeText('https://discord.com/invite/Y9cpqdvZE4');
-          showToast('📋 Discord invite copied to clipboard!', { type: 'success', icon: '📋' });
-        },
-      },
-      {
-        id: 'util-email',
-        title: 'Copy Guild Master Email',
-        subtitle: 'tag@vit.ac.in',
-        category: 'Settings & Audio',
-        icon: '✉️',
-        keywords: ['email', 'contact', 'mail', 'support'],
-        action: () => {
-          navigator.clipboard.writeText('tag@vit.ac.in');
-          showToast('📋 Email tag@vit.ac.in copied!', { type: 'success', icon: '📋' });
-        },
-      },
-      {
-        id: 'util-youtube',
-        title: 'Open TAG YouTube Channel',
-        subtitle: YOUTUBE_CONFIG.channelUrl,
-        category: 'Settings & Audio',
-        icon: '▶',
-        keywords: ['youtube', 'channel', 'stream', 'video'],
-        action: () => window.open(YOUTUBE_CONFIG.channelUrl, '_blank', 'noopener,noreferrer'),
-      },
-
-      // ─────────────────────────────────────────────────────────────
-      // QUESTS & TOURNAMENTS (from events data)
-      // ─────────────────────────────────────────────────────────────
-      ...events.map((e) => ({
-        id: `event-${e.id}`,
-        title: e.title,
-        subtitle: `${e.date} • ${e.fullDate} (${e.status.toUpperCase()})`,
-        category: 'Quests & Events' as const,
-        icon: e.category === 'Technology' ? '⚡' : '🎮',
-        badge: e.status.toUpperCase(),
-        keywords: ['quest', 'event', e.title, e.category, e.status, e.difficulty || ''],
-        action: () => {
-          if (e.link) {
-            window.open(e.link, '_blank', 'noopener,noreferrer');
-          } else {
-            router.push('/events');
+          playBlip();
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.origin);
+            showToast('🔗 Website link copied to clipboard!', { type: 'success', icon: '📋' });
           }
         },
-      })),
-
-      // ─────────────────────────────────────────────────────────────
-      // OFFICERS & LEADERS (from team seasons)
-      // ─────────────────────────────────────────────────────────────
-      ...officersList.map((m, idx) => ({
-        id: `officer-${idx}`,
-        title: m.name,
-        subtitle: `${m.position} • Season ${m.year} (${m.class.toUpperCase()})`,
-        category: 'Officers & Dossiers' as const,
-        icon: m.class === 'tech' ? '⚡' : m.class === 'gaming' ? '🎮' : '👑',
-        badge: `S-${m.year}`,
-        keywords: ['officer', 'leader', m.name, m.position, m.year, m.class],
-        action: () => router.push('/team'),
-      })),
-
-      // ─────────────────────────────────────────────────────────────
-      // CLIPS & PLAYS
-      // ─────────────────────────────────────────────────────────────
-      ...CLIPS.map((clip) => ({
-        id: `clip-${clip.id}`,
-        title: clip.title,
-        subtitle: `${clip.game} • ${clip.player} (${clip.duration})`,
-        category: 'Clips & Plays' as const,
-        icon: '🎬',
-        badge: clip.game,
-        keywords: ['clip', 'highlight', clip.title, clip.game, clip.player, ...clip.tags],
-        action: () => router.push('/clips'),
-      })),
+      },
     ];
 
-    return items;
-  }, [officersList, router, showToast]);
+    // Dynamic Quests / Events
+    events.slice(0, 6).forEach((event) => {
+      items.push({
+        id: `event-${event.id}`,
+        title: event.title,
+        subtitle: `${event.fullDate} • ${event.category} (${event.status.toUpperCase()})`,
+        category: 'Quests & Events',
+        icon: event.category === 'Technology' ? '⚡' : '🎮',
+        keywords: [event.title, event.category, event.status, event.date],
+        badge: event.xpReward ?? 'Quest',
+        action: () => {
+          if (event.link) window.open(event.link, '_blank');
+          else router.push('/events');
+        },
+      });
+    });
 
-  // Filter commands by query
+    // Dynamic Clips
+    CLIPS.slice(0, 5).forEach((clip) => {
+      items.push({
+        id: `clip-${clip.id}`,
+        title: clip.title,
+        subtitle: `${clip.game} • by ${clip.player} (${clip.duration})`,
+        category: 'Clips & Plays',
+        icon: '🎬',
+        keywords: [clip.title, clip.player, clip.game, ...clip.tags],
+        badge: clip.views,
+        action: () => router.push('/clips'),
+      });
+    });
+
+    // Dynamic Officers
+    officersList.slice(0, 8).forEach((officer, idx) => {
+      items.push({
+        id: `officer-${idx}`,
+        title: officer.name,
+        subtitle: `${officer.position} • Council ${officer.year}`,
+        category: 'Officers & Dossiers',
+        icon: officer.class === 'tech' ? '⚡' : officer.class === 'gaming' ? '🎮' : '👑',
+        keywords: [officer.name, officer.position, officer.year],
+        badge: officer.class.toUpperCase(),
+        action: () => router.push('/team'),
+      });
+    });
+
+    return items;
+  }, [router, officersList, unlockedAchievements, showToast]);
+
   const filteredCommands = useMemo(() => {
-    if (!query.trim()) return allCommands.slice(0, 24); // Show top default suggestions
-    const q = query.toLowerCase();
-    return allCommands.filter((item) => {
-      if (item.title.toLowerCase().includes(q)) return true;
-      if (item.subtitle?.toLowerCase().includes(q)) return true;
-      if (item.category.toLowerCase().includes(q)) return true;
-      if (item.keywords?.some((k) => k.toLowerCase().includes(q))) return true;
+    if (!query.trim()) return allCommands;
+    const q = query.toLowerCase().trim();
+
+    return allCommands.filter((cmd) => {
+      if (cmd.title.toLowerCase().includes(q)) return true;
+      if (cmd.subtitle?.toLowerCase().includes(q)) return true;
+      if (cmd.category.toLowerCase().includes(q)) return true;
+      if (cmd.keywords?.some((k) => k.toLowerCase().includes(q))) return true;
       return false;
     });
   }, [allCommands, query]);
 
-  // Group filtered commands by category
   const groupedCommands = useMemo(() => {
-    const groups: { [key: string]: CommandItem[] } = {};
+    const groups: Record<string, CommandItem[]> = {};
     filteredCommands.forEach((cmd) => {
       if (!groups[cmd.category]) groups[cmd.category] = [];
       groups[cmd.category].push(cmd);
@@ -364,16 +272,15 @@ export default function CommandPalette() {
     return groups;
   }, [filteredCommands]);
 
-  // Keyboard navigation within the filtered results
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredCommands.length));
       playBlip();
+      setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredCommands.length));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filteredCommands.length) % Math.max(1, filteredCommands.length));
       playBlip();
+      setSelectedIndex((prev) => (prev - 1 + filteredCommands.length) % Math.max(1, filteredCommands.length));
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const selected = filteredCommands[selectedIndex];
@@ -389,23 +296,22 @@ export default function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-[9998] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/85 backdrop-blur-md font-mono"
-      onClick={() => setIsOpen(false)}
+      className="fixed inset-0 z-[9998] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/85 backdrop-blur-xl"
+      onClick={() => {
+        setIsOpen(false);
+        setShowAchievementsModal(false);
+      }}
     >
       <div
-        className="relative w-full max-w-2xl bg-black border-2 border-yellow-400 rounded-2xl overflow-hidden shadow-2xl font-mono flex flex-col max-h-[80vh]"
+        className="relative w-full max-w-2xl bg-[#0c0c12] border-2 border-yellow-400 rounded-2xl overflow-hidden shadow-[6px_6px_0px_0px_#fff400] flex flex-col max-h-[80vh]"
         style={{
-          boxShadow: '0 0 60px rgba(255, 244, 0, 0.3)',
           animation: 'paletteIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
-        {/* CRT Scanline */}
-        <div className="absolute inset-0 bg-scanline opacity-5 pointer-events-none" />
-
         {/* Search Header */}
-        <div className="flex items-center gap-3 px-4 py-3.5 bg-gray-950 border-b border-gray-800 shrink-0">
+        <div className="flex items-center gap-3 px-4 py-3.5 bg-zinc-950 border-b-2 border-zinc-800 shrink-0">
           <span className="text-yellow-400 text-lg">⚡</span>
           <input
             ref={inputRef}
@@ -415,18 +321,18 @@ export default function CommandPalette() {
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
-            placeholder="Type a command, quest, game cheat, or officer name..."
-            className="flex-1 bg-transparent text-white placeholder-gray-600 text-sm outline-none font-mono"
+            placeholder="Type a command, quest, clip, or officer name..."
+            className="flex-1 bg-transparent text-white placeholder-zinc-500 text-sm outline-none font-sans"
           />
           {query ? (
             <button
               onClick={() => setQuery('')}
-              className="text-gray-500 hover:text-white text-xs px-2 py-1"
+              className="text-zinc-500 hover:text-white text-xs px-2 py-1 font-mono"
             >
               ✕
             </button>
           ) : (
-            <kbd className="hidden sm:inline-block px-2 py-0.5 text-[11px] bg-gray-900 text-gray-500 border border-gray-800 rounded">
+            <kbd className="hidden sm:inline-block px-2 py-0.5 text-[11px] font-mono bg-zinc-900 text-zinc-400 border border-zinc-700 rounded">
               ESC
             </kbd>
           )}
@@ -435,20 +341,21 @@ export default function CommandPalette() {
         {/* Results List */}
         <div ref={listRef} className="overflow-y-auto p-2 sm:p-3 space-y-4 flex-1">
           {filteredCommands.length === 0 ? (
-            <div className="py-12 text-center text-gray-500 text-xs">
+            <div className="py-12 text-center text-zinc-500 text-xs">
               <div className="text-3xl mb-2">👾</div>
               <div>NO GUILD PROTOCOLS MATCH &quot;{query}&quot;</div>
-              <div className="text-gray-600 text-[11px] mt-1">
-                Try searching &quot;elden&quot;, &quot;valorant&quot;, &quot;500kg&quot;, or &quot;events&quot;
+              <div className="text-zinc-600 text-[11px] font-mono mt-1">
+                Try searching &quot;achievements&quot;, &quot;events&quot;, &quot;clips&quot;, or &quot;discord&quot;
               </div>
             </div>
           ) : (
             Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category}>
-                <div className="text-[10px] font-bold text-gray-500 tracking-widest uppercase px-3 py-1">
-                  {category}
+                <div className="text-[10px] font-mono font-bold text-yellow-400/90 tracking-widest uppercase px-3 py-1 flex items-center justify-between">
+                  <span>// {category}</span>
+                  <span className="text-zinc-600">[{items.length}]</span>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   {items.map((item) => {
                     const currentIndex = filteredCommands.findIndex((c) => c.id === item.id);
                     const isSelected = currentIndex === selectedIndex;
@@ -461,20 +368,20 @@ export default function CommandPalette() {
                           item.action();
                         }}
                         onMouseEnter={() => setSelectedIndex(currentIndex)}
-                        className={`flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl cursor-pointer transition-all ${
+                        className={`flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl cursor-pointer transition-all border ${
                           isSelected
-                            ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/50 shadow-md'
-                            : 'hover:bg-gray-900/60 text-gray-300 border border-transparent'
+                            ? 'bg-yellow-400 text-black border-black font-semibold shadow-[3px_3px_0px_0px_#ffffff] translate-x-1'
+                            : 'bg-zinc-950/60 hover:bg-zinc-900 text-zinc-300 border-zinc-800/80'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <span className="text-base shrink-0">{item.icon}</span>
                           <div className="truncate">
-                            <div className="text-xs sm:text-sm font-bold text-white truncate">
+                            <div className={`text-xs sm:text-sm font-bold truncate ${isSelected ? 'text-black' : 'text-white'}`}>
                               {item.title}
                             </div>
                             {item.subtitle && (
-                              <div className="text-[11px] text-gray-500 truncate">
+                              <div className={`text-[11px] truncate ${isSelected ? 'text-zinc-800' : 'text-zinc-500'}`}>
                                 {item.subtitle}
                               </div>
                             )}
@@ -482,7 +389,13 @@ export default function CommandPalette() {
                         </div>
 
                         {item.badge && (
-                          <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-yellow-400">
+                          <span
+                            className={`shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                              isSelected
+                                ? 'bg-black text-yellow-400 border-black'
+                                : 'bg-zinc-900 border-zinc-800 text-yellow-400'
+                            }`}
+                          >
                             {item.badge}
                           </span>
                         )}
@@ -496,17 +409,100 @@ export default function CommandPalette() {
         </div>
 
         {/* Footer Shortcut Legend */}
-        <div className="px-4 py-2.5 bg-gray-950 border-t border-gray-900 flex items-center justify-between text-[11px] text-gray-500 shrink-0">
+        <div className="px-4 py-2.5 bg-zinc-950 border-t-2 border-zinc-800 flex items-center justify-between text-[11px] text-zinc-500 font-mono shrink-0">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <span className="text-yellow-400/80 font-bold hidden sm:inline">
-            TAG COMMAND PALETTE // v4.2
+          <span className="text-yellow-400/90 font-bold hidden sm:inline">
+            COMMAND PALETTE // v4.2
           </span>
         </div>
       </div>
+
+      {/* Secret Achievements Tracker Modal */}
+      {showAchievementsModal && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl"
+          onClick={() => setShowAchievementsModal(false)}
+        >
+          <div
+            className="relative w-full max-w-xl bg-[#0c0c12] border-2 border-yellow-400 rounded-2xl p-6 shadow-[6px_6px_0px_0px_#fff400] max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 mb-4 border-b-2 border-zinc-800">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🏆</span>
+                <div>
+                  <h3 className="font-bold text-base text-white">Guild Secrets &amp; Achievements</h3>
+                  <div className="text-xs font-mono text-yellow-400">
+                    {unlockedAchievements.length} / {ACHIEVEMENTS.length} Discovered Through Interactions
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAchievementsModal(false)}
+                className="text-zinc-400 hover:text-white font-mono text-xs px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800"
+              >
+                ESC ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+              Secrets are unlocked by performing specific tactical interactions with the website (exploration, combos, and hidden markers).
+            </p>
+
+            <div className="space-y-2.5">
+              {ACHIEVEMENTS.map((ach) => {
+                const isUnlocked = unlockedAchievements.includes(ach.id);
+                return (
+                  <div
+                    key={ach.id}
+                    className={`p-3.5 rounded-xl border-2 transition-all ${
+                      isUnlocked
+                        ? 'bg-yellow-400/10 border-yellow-400/60 shadow-[2px_2px_0px_0px_#fff400]'
+                        : 'bg-zinc-950/80 border-zinc-800/80 opacity-70'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{ach.icon}</span>
+                        <span className="font-bold text-sm text-white">{ach.title}</span>
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-700 text-zinc-400">
+                          {ach.game}
+                        </span>
+                      </div>
+                      <span
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                          isUnlocked
+                            ? 'bg-yellow-400 text-black font-extrabold'
+                            : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
+                        }`}
+                      >
+                        {isUnlocked ? 'UNLOCKED ✓' : 'LOCKED 🔒'}
+                      </span>
+                    </div>
+
+                    <div className="text-xs text-zinc-300 ml-7 mb-1">
+                      {isUnlocked ? ach.description : ach.hint}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-zinc-800 text-center">
+              <button
+                onClick={() => setShowAchievementsModal(false)}
+                className="px-6 py-2 bg-yellow-400 text-black font-extrabold text-xs rounded-lg hover:bg-yellow-300 font-mono shadow-[2px_2px_0px_0px_#fff]"
+              >
+                CLOSE LOGBOOK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx global>{`
         @keyframes paletteIn {

@@ -20,32 +20,25 @@ export function useToast() {
 }
 
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: number) => void }) {
-  const bgColor = {
-    success: 'border-green-500 bg-green-500/10',
-    info: 'border-blue-500 bg-blue-500/10',
-    warning: 'border-yellow-400 bg-yellow-400/10',
-    xp: 'border-yellow-400 bg-yellow-400/10',
-  }[toast.type ?? 'info'];
-
-  const textColor = {
-    success: 'text-green-400',
-    info: 'text-blue-400',
-    warning: 'text-yellow-400',
-    xp: 'text-yellow-400',
+  const styling = {
+    success: 'border-2 border-emerald-400 bg-[#0c0c12] text-emerald-300 shadow-[4px_4px_0px_0px_#34d399]',
+    info: 'border-2 border-cyan-400 bg-[#0c0c12] text-cyan-300 shadow-[4px_4px_0px_0px_#00f0ff]',
+    warning: 'border-2 border-yellow-400 bg-[#0c0c12] text-yellow-300 shadow-[4px_4px_0px_0px_#fff400]',
+    xp: 'border-2 border-yellow-400 bg-[#0c0c12] text-yellow-300 shadow-[4px_4px_0px_0px_#fff400]',
   }[toast.type ?? 'info'];
 
   return (
     <div
-      className={`flex items-center justify-between gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 bg-black/95 border-2 ${bgColor} rounded-xl font-mono text-xs sm:text-sm shadow-2xl max-w-full`}
-      style={{ animation: 'toastSlideIn 0.3s ease-out' }}
+      className={`flex items-center justify-between gap-3 px-4 py-3 border backdrop-blur-xl rounded-xl font-mono text-xs sm:text-sm shadow-2xl max-w-full ${styling}`}
+      style={{ animation: 'toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)' }}
     >
       <div className="flex items-center gap-2.5 min-w-0">
         {toast.icon && <span className="text-base sm:text-lg shrink-0">{toast.icon}</span>}
-        <span className={`font-bold ${textColor} break-words`}>{toast.message}</span>
+        <span className="font-bold break-words">{toast.message}</span>
       </div>
       <button
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-300 transition-colors text-sm rounded-lg hover:bg-gray-900"
+        className="shrink-0 w-7 h-7 flex items-center justify-center text-zinc-500 hover:text-white transition-colors text-sm rounded-lg hover:bg-zinc-800"
         aria-label="Dismiss alert"
       >
         ✕
@@ -84,8 +77,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       </div>
       <style jsx global>{`
         @keyframes toastSlideIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(12px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
     </ToastContext.Provider>

@@ -1,65 +1,133 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { getAssetPath } from '../utils/asset';
+import { recordInteraction } from './EasterEggs';
+import { playBlip } from './SoundEffects';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-10 px-4 sm:px-8 border-t-2 border-gray-800 bg-black/80 font-mono">
+    <footer className="py-12 px-4 sm:px-8 border-t-2 border-zinc-800 bg-[#09090e] relative z-10 font-sans">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-yellow-400/20 blur-md"></div>
-              <Image
-                src={getAssetPath('/TAG_Vector.svg')}
-                alt="TAG Logo"
-                width={70}
-                height={70}
-                className="object-contain relative z-10 w-14 h-14 sm:w-16 sm:h-16"
-                priority
-              />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 pb-10 border-b border-zinc-800/80">
+          {/* Brand Column */}
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 flex items-center justify-center bg-zinc-950 border-2 border-yellow-400 rounded-xl shadow-[3px_3px_0px_0px_#fff400]">
+                <Image
+                  src={getAssetPath('/TAG_Vector.svg')}
+                  alt="TAG Logo"
+                  width={36}
+                  height={36}
+                  className="object-contain relative z-10"
+                  priority
+                />
+              </div>
+              <div>
+                <div className="font-black text-white text-base tracking-tight flex items-center gap-2">
+                  TAG CLUB <span className="text-[10px] font-mono text-black font-extrabold px-1.5 py-0.5 rounded bg-yellow-400 border border-black shadow-[1px_1px_0px_0px_#fff]">VIT VELLORE</span>
+                </div>
+                <div className="text-xs text-zinc-400 font-mono">Technology &amp; Gaming Collective</div>
+              </div>
             </div>
-            <div>
-              <div className="text-xs text-gray-500 font-mono font-bold tracking-wider">[GUILD_CREST]</div>
-              <div className="text-xs text-gray-600">EST. 2019 • VIT VELLORE</div>
-            </div>
-          </div>
+            <p className="text-zinc-400 text-xs sm:text-sm max-w-md leading-relaxed">
+              VIT Vellore&apos;s premier hub for game developers, software engineers, tournament contenders, and tech enthusiasts building the future of interactive entertainment.
+            </p>
 
-          {/* Nav links in footer with mobile-friendly touch targets */}
-          <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
-            {[
-              { name: 'Home', href: '/' },
-              { name: 'About', href: '/#about' },
-              { name: 'Events', href: '/events' },
-              { name: 'Clips', href: '/clips' },
-              { name: 'Team', href: '/team' },
-            ].map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-gray-400 hover:text-yellow-400 transition-colors text-xs font-mono tracking-wider px-2.5 py-2 min-h-[40px] flex items-center"
+            {/* Secret Interactive Arcade Markers */}
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <button
+                onClick={() => {
+                  playBlip();
+                  recordInteraction('bloodstain');
+                }}
+                className="px-2.5 py-1 text-[11px] font-mono text-red-400 hover:text-red-300 bg-red-950/40 border border-red-800/80 hover:border-red-500 rounded-md transition-all hover:scale-105"
+                title="Inspect bloodstain..."
               >
-                {link.name}
-              </Link>
-            ))}
+                🩸 Bloodstain: &ldquo;Try jumping&rdquo;
+              </button>
+
+              <button
+                onClick={() => {
+                  playBlip();
+                  recordInteraction('diamond');
+                }}
+                className="px-2.5 py-1 text-[11px] font-mono text-cyan-300 hover:text-cyan-200 bg-cyan-950/40 border border-cyan-800/80 hover:border-cyan-400 rounded-md transition-all hover:scale-105"
+                title="Mine secret diamond ore..."
+              >
+                💎 [Diamond Ore]
+              </button>
+            </div>
           </div>
 
-          <div className="text-center">
-            <div className="text-gray-400 text-xs sm:text-sm font-mono mb-1">
-              © {currentYear} TAG CLUB VIT • SEASON {currentYear}
+          {/* Quick Links Column */}
+          <div>
+            <div className="text-xs font-mono font-bold text-yellow-400 tracking-wider uppercase mb-3">
+              // SECTORS
             </div>
-            <div className="text-gray-600 text-[11px] sm:text-xs font-mono flex flex-wrap items-center gap-2 justify-center">
-              <span>⚡ EMPOWERING INNOVATION IN TECH &amp; GAMING</span>
-              <span className="w-1 h-1 bg-yellow-400 rounded-full hidden sm:inline"></span>
-              <span>v4.2.0</span>
+            <div className="flex flex-col space-y-2">
+              {[
+                { name: 'Home Lobby', href: '/' },
+                { name: 'Pillars & About', href: '/#about' },
+                { name: 'Quest Board (Events)', href: '/events' },
+                { name: 'Replay Cinema (Clips)', href: '/clips' },
+                { name: 'The Chronicle (Team)', href: '/team' },
+              ].map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-zinc-400 hover:text-yellow-400 transition-colors text-xs py-1"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 text-xs text-gray-500 font-mono bg-gray-950 border border-gray-800 px-3 py-1.5 rounded-full">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span>SERVER STATUS: ONLINE</span>
+          {/* Telemetry / Node Info */}
+          <div>
+            <div className="text-xs font-mono font-bold text-cyan-400 tracking-wider uppercase mb-3">
+              // TELEMETRY
+            </div>
+            <div className="space-y-2.5 text-xs text-zinc-400">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                <span className="font-mono text-zinc-300">NODE VIT-01: ONLINE</span>
+              </div>
+              <div className="font-mono text-zinc-400">
+                DISCORD: <span className="text-zinc-300">150+ GUILD MEMBERS</span>
+              </div>
+              <div className="font-mono text-zinc-400">
+                UPTIME: <span className="text-yellow-400">99.9% (SEASON {currentYear})</span>
+              </div>
+              <div className="pt-2">
+                <span className="text-[11px] font-mono px-2 py-1 rounded bg-zinc-950 border border-zinc-700 text-zinc-400 shadow-[2px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                  BUILD v4.2.0 • PROD
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-400 font-mono">
+          <div>
+            © {currentYear} TAG CLUB VIT. ALL RIGHTS RESERVED.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="hover:text-yellow-400 transition-colors cursor-default">
+              BUILT FOR BUILDERS &amp; GAMERS
+            </span>
+            <span className="text-zinc-700">•</span>
+            <a
+              href="mailto:tag@vit.ac.in"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              tag@vit.ac.in
+            </a>
           </div>
         </div>
       </div>

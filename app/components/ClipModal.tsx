@@ -76,33 +76,29 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl"
       onClick={() => {
         playBlip();
         onClose();
       }}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-black border-2 border-yellow-400 rounded-2xl overflow-hidden shadow-2xl font-mono"
+        className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-[#0c0c12] border-2 border-yellow-400 rounded-2xl overflow-hidden shadow-[6px_6px_0px_0px_#fff400]"
         style={{
-          boxShadow: '0 0 60px rgba(255, 244, 0, 0.25)',
           animation: 'clipModalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* CRT Scanline */}
-        <div className="absolute inset-0 bg-scanline opacity-5 pointer-events-none" />
-
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 bg-gray-950 border-b border-gray-800 shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 bg-zinc-900/80 border-b border-white/[0.06] shrink-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-            <span className="text-xs text-yellow-400 font-bold tracking-wider">
+            <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_#ef4444]" />
+            <span className="text-xs text-yellow-400 font-mono font-bold tracking-wider">
               REPLAY_CINEMA // {clip.game.toUpperCase()}
             </span>
             {isPlaceholder && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400/80 border border-yellow-400/25">
-                PLACEHOLDER
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400/90 border border-yellow-400/25">
+                STANDBY
               </span>
             )}
           </div>
@@ -111,15 +107,15 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
               playBlip();
               onClose();
             }}
-            className="text-gray-400 hover:text-yellow-400 font-bold text-xs px-3 py-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-gray-900 transition-colors"
+            className="text-zinc-400 hover:text-white font-mono font-bold text-xs px-3 py-1.5 min-h-[38px] flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors"
             aria-label="Close modal"
           >
-            [ ESC ✕ ]
+            ESC ✕
           </button>
         </div>
 
         {/* Cinema Video Player Viewport */}
-        <div className="relative aspect-video w-full bg-black flex items-center justify-center border-b border-gray-800 shrink-0">
+        <div className="relative aspect-video w-full bg-black flex items-center justify-center border-b border-white/[0.06] shrink-0">
           {embedUrl ? (
             <iframe
               src={embedUrl}
@@ -129,26 +125,23 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
               allowFullScreen
             />
           ) : (
-            // Placeholder state — video not yet on YouTube
             <div
               className={`w-full h-full bg-gradient-to-br ${clip.thumbnailGradient} flex flex-col items-center justify-center gap-4 p-6 sm:p-8 text-center`}
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-yellow-400/15 border-2 border-yellow-400/30 border-dashed flex items-center justify-center text-3xl sm:text-4xl">
+              <div className="w-16 h-16 rounded-2xl bg-yellow-400/15 border border-yellow-400/30 flex items-center justify-center text-3xl">
                 🎬
               </div>
               <div>
-                <div className="text-sm font-bold text-yellow-400 mb-1">VIDEO UPLOADING SOON</div>
-                <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed">
-                  This slot is reserved. Once uploaded to YouTube, set the{' '}
-                  <code className="text-yellow-400/80 bg-yellow-400/10 px-1 rounded">youtubeVideoId</code>{' '}
-                  in <code className="text-gray-300">app/data/clips.ts</code>.
+                <div className="text-sm font-bold text-yellow-400 mb-1">REPLAY CLIP QUEUED</div>
+                <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
+                  This clip slot is configured. Watch other highlights or visit the official TAG YouTube channel.
                 </p>
               </div>
               <a
                 href={YOUTUBE_CONFIG.channelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-600/80 hover:bg-red-600 border border-red-500/40 text-white font-bold text-xs rounded-xl transition-all min-h-[44px]"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl transition-all"
               >
                 <span>▶</span>
                 Visit TAG Club YouTube
@@ -157,23 +150,23 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
           )}
         </div>
 
-        {/* Clip Information & Controls — scrollable on short mobile screens */}
-        <div className="p-4 sm:p-6 bg-gradient-to-b from-gray-950 to-black overflow-y-auto">
+        {/* Clip Information & Controls */}
+        <div className="p-4 sm:p-6 bg-zinc-950/90 overflow-y-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
             <div>
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2">
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-400 border border-yellow-400/30">
+                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-yellow-400/15 text-yellow-400 border border-yellow-400/30">
                   {clip.gameIcon ?? '🎮'} {clip.game}
                 </span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase">
+                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 uppercase">
                   {clip.category}
                 </span>
                 {clip.tournamentName && (
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/40">
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                     🏆 {clip.tournamentName}
                   </span>
                 )}
-                <span className="text-xs text-gray-500 font-mono">
+                <span className="text-xs text-zinc-500 font-mono">
                   ⏱️ {clip.duration} • {clip.views} views
                 </span>
               </div>
@@ -185,12 +178,12 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
               <button
                 onClick={handleLike}
                 disabled={clip.isPlaceholder && !clip.youtubeVideoId}
-                className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold border transition-all min-h-[44px] ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all min-h-[40px] ${
                   clip.isPlaceholder && !clip.youtubeVideoId
-                    ? 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                    ? 'border-white/[0.08] bg-zinc-900/50 text-zinc-600 cursor-not-allowed'
                     : hasLiked
                     ? 'border-red-500 bg-red-500/20 text-red-400'
-                    : 'border-gray-800 bg-gray-900 text-gray-300 hover:border-yellow-400 hover:text-yellow-400'
+                    : 'border-white/[0.08] bg-zinc-900 text-zinc-300 hover:border-yellow-400 hover:text-yellow-400'
                 }`}
               >
                 <span>{hasLiked ? '❤️' : '🤍'}</span>
@@ -199,17 +192,16 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
 
               <button
                 onClick={handleCopyLink}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 hover:border-yellow-400 hover:text-yellow-400 transition-all min-h-[44px]"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-white/[0.08] bg-zinc-900 text-zinc-300 hover:border-yellow-400 hover:text-yellow-400 transition-all min-h-[40px]"
                 title="Share clip"
               >
                 <span>🔗</span>
                 <span>Share</span>
               </button>
 
-              {/* Open on YouTube button */}
               <button
                 onClick={handleOpenYouTube}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold border border-red-800/60 bg-red-950/30 text-red-400 hover:border-red-500 hover:bg-red-500/20 transition-all min-h-[44px]"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-red-800/60 bg-red-950/30 text-red-400 hover:border-red-500 hover:bg-red-500/20 transition-all min-h-[40px]"
                 title={clip.youtubeVideoId ? 'Watch on YouTube' : 'Visit TAG Club YouTube Channel'}
               >
                 <span>▶</span>
@@ -218,27 +210,27 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
             </div>
           </div>
 
-          <p className="text-gray-400 text-xs sm:text-sm font-mono leading-relaxed mb-4">
+          <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">
             {clip.description}
           </p>
 
           {/* Player Credit HUD */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-gray-900 text-xs">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-white/[0.06] text-xs">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-base shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-base shrink-0">
                 {clip.playerAvatar ?? '🎮'}
               </div>
               <div>
                 <div className="text-white font-bold">{clip.player}</div>
-                <div className="text-gray-500 text-[11px]">{clip.playerTitle}</div>
+                <div className="text-zinc-500 font-mono text-[11px]">{clip.playerTitle}</div>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 font-mono">
               {clip.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-[11px] text-gray-500 bg-black border border-gray-800 px-2 py-0.5 rounded"
+                  className="text-[11px] text-zinc-400 bg-zinc-900 border border-white/[0.06] px-2 py-0.5 rounded"
                 >
                   #{tag}
                 </span>
@@ -264,7 +256,6 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
   );
 }
 
-// local helper for opening YouTube in modal
 function playSelect() {
   try {
     const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
