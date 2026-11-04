@@ -70,7 +70,7 @@ export default function MemberInspectModal({
       }}
     >
       <div
-        className={`relative w-full max-w-2xl bg-black border-2 ${classColor.border} rounded-2xl overflow-hidden shadow-2xl p-6 sm:p-8 font-mono`}
+        className={`relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-black border-2 ${classColor.border} rounded-2xl shadow-2xl p-5 sm:p-8 font-mono`}
         style={{
           boxShadow: `0 0 50px rgba(${member.class === 'tech' ? '6,182,212' : member.class === 'gaming' ? '34,197,94' : '255,244,0'}, 0.25)`,
           animation: 'modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -81,7 +81,7 @@ export default function MemberInspectModal({
         <div className="absolute inset-0 bg-scanline opacity-5 pointer-events-none" />
 
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
+        <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-5">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-yellow-400 rounded-full animate-pulse" />
             <span className="text-xs text-gray-400 font-mono">
@@ -93,7 +93,8 @@ export default function MemberInspectModal({
               playBlip();
               onClose();
             }}
-            className="text-gray-400 hover:text-yellow-400 font-bold text-sm px-2 py-1 rounded hover:bg-gray-900 transition-colors"
+            className="text-gray-400 hover:text-yellow-400 font-bold text-xs px-3 py-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-gray-900 transition-colors"
+            aria-label="Close dossier"
           >
             [ ESC ✕ ]
           </button>
@@ -209,13 +210,13 @@ export default function MemberInspectModal({
 
         {/* Social Links & Action */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {member.socials?.linkedin && (
               <a
                 href={member.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs px-3 py-1.5 bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded transition-all font-bold"
+                className="text-xs px-3.5 py-2.5 min-h-[44px] flex items-center bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded-lg transition-all font-bold"
               >
                 LinkedIn ↗
               </a>
@@ -225,7 +226,7 @@ export default function MemberInspectModal({
                 href={member.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs px-3 py-1.5 bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded transition-all font-bold"
+                className="text-xs px-3.5 py-2.5 min-h-[44px] flex items-center bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded-lg transition-all font-bold"
               >
                 GitHub ↗
               </a>
@@ -235,7 +236,7 @@ export default function MemberInspectModal({
                 href={member.socials.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs px-3 py-1.5 bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded transition-all font-bold"
+                className="text-xs px-3.5 py-2.5 min-h-[44px] flex items-center bg-gray-900 hover:bg-yellow-400 hover:text-black border border-gray-800 hover:border-yellow-400 text-gray-300 rounded-lg transition-all font-bold"
               >
                 Instagram ↗
               </a>
@@ -247,7 +248,7 @@ export default function MemberInspectModal({
               playBlip();
               onClose();
             }}
-            className="w-full sm:w-auto px-6 py-2 bg-yellow-400 text-black font-bold text-xs rounded hover:bg-yellow-300 transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 min-h-[44px] flex items-center justify-center bg-yellow-400 text-black font-bold text-xs rounded-lg hover:bg-yellow-300 transition-colors"
           >
             DISMISS DOSSIER
           </button>

@@ -161,19 +161,19 @@ function PlaylistBanner() {
   return (
     <section className="mb-14 bg-gradient-to-br from-gray-900/90 to-black border-2 border-red-600/30 rounded-3xl overflow-hidden shadow-2xl">
       {/* Banner Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-black/60">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-800 bg-black/60 gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-red-600 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
             <span className="text-xs font-bold text-red-400 tracking-widest">YOUTUBE</span>
           </div>
-          <span className="text-gray-600">|</span>
+          <span className="text-gray-600 hidden sm:inline">|</span>
           <span className="text-xs font-bold text-white tracking-wider">
             TAG CLUB OFFICIAL CLIPS PLAYLIST
           </span>
           {isPlaceholder && (
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400/80 border border-yellow-400/25">
-              PLAYLIST NOT CONFIGURED
+              NOT LINKED
             </span>
           )}
         </div>
@@ -181,7 +181,7 @@ function PlaylistBanner() {
           href={YOUTUBE_CONFIG.channelUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors flex items-center gap-1"
+          className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors flex items-center gap-1 min-h-[36px]"
           onClick={() => playBlip()}
         >
           Visit Channel ↗
@@ -301,10 +301,10 @@ export default function ClipsPage() {
             </span>
             <div className="w-12 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
             Club <span className="text-yellow-400">Clips &amp; Highlights</span>
           </h1>
-          <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base font-mono">
+          <p className="text-gray-400 max-w-2xl mx-auto text-xs sm:text-sm md:text-base font-mono px-2">
             Watch tournament clutches, aces, and legendary guild plays. All clips sourced from the
             official TAG Club YouTube channel.
           </p>
@@ -316,8 +316,8 @@ export default function ClipsPage() {
         {/* Filter Toolbar */}
         <div className="space-y-4 mb-10">
           {/* Game pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="text-xs text-gray-500 font-bold uppercase mr-1">GAME:</span>
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            <span className="text-xs text-gray-500 font-bold uppercase mr-1 text-[11px] sm:text-xs">GAME:</span>
             {CLIP_GAMES.map((game) => (
               <button
                 key={game}
@@ -325,7 +325,7 @@ export default function ClipsPage() {
                   playBlip();
                   setSelectedGame(game);
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                className={`px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border min-h-[40px] flex items-center ${
                   selectedGame === game
                     ? 'border-yellow-400 bg-yellow-400/20 text-yellow-400 shadow-md'
                     : 'border-gray-800 bg-black/60 text-gray-400 hover:text-white'
@@ -338,7 +338,7 @@ export default function ClipsPage() {
 
           {/* Category tabs & search */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 max-w-5xl mx-auto">
-            <div className="flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
               {[
                 { key: 'all', label: 'All Plays', icon: '🎬' },
                 { key: 'clutch', label: 'Clutches', icon: '🔥' },
@@ -353,7 +353,7 @@ export default function ClipsPage() {
                     playSelect();
                     setSelectedCategory(tab.key);
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                  className={`px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border min-h-[40px] flex items-center ${
                     selectedCategory === tab.key
                       ? 'border-yellow-400 bg-yellow-400/15 text-yellow-400'
                       : 'border-gray-800 bg-black/40 text-gray-400 hover:text-white'
@@ -371,7 +371,7 @@ export default function ClipsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by player, game, or tags..."
-                className="w-full bg-black/80 border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                className="w-full bg-black/80 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors min-h-[44px]"
               />
               {searchQuery && (
                 <button
@@ -420,24 +420,24 @@ export default function ClipsPage() {
         </div>
 
         {/* Submit a Clip Callout */}
-        <section className="mt-16 max-w-4xl mx-auto bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400/30 rounded-3xl p-8 sm:p-10 text-center relative overflow-hidden shadow-2xl">
+        <section className="mt-14 sm:mt-16 max-w-4xl mx-auto bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400/30 rounded-3xl p-6 sm:p-10 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 space-y-3">
-            <div className="text-4xl mb-2">📹</div>
-            <h3 className="text-2xl font-bold text-white">
+            <div className="text-3xl sm:text-4xl mb-2">📹</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white">
               Hit an Insane Shot or 1vX Clutch?
             </h3>
-            <p className="text-gray-400 text-xs sm:text-sm font-mono max-w-xl mx-auto">
+            <p className="text-gray-400 text-xs sm:text-sm font-mono max-w-xl mx-auto leading-relaxed">
               Share your best plays in the club Discord{' '}
               <span className="text-yellow-400">#clip-submissions</span> channel. Our media team
               reviews entries weekly and uploads highlights to the YouTube channel.
             </p>
-            <div className="pt-4">
+            <div className="pt-3 sm:pt-4">
               <a
                 href="https://discord.com/invite/Y9cpqdvZE4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-yellow-400 text-black font-bold text-xs sm:text-sm rounded-xl hover:bg-yellow-300 transition-all hover:scale-105 shadow-lg shadow-yellow-400/25"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 bg-yellow-400 text-black font-bold text-xs sm:text-sm rounded-xl hover:bg-yellow-300 transition-all hover:scale-105 shadow-lg shadow-yellow-400/25 min-h-[44px]"
               >
                 <span>🎮</span>
                 SUBMIT YOUR CLIP ON DISCORD

@@ -24,18 +24,18 @@ export default function ProTipTicker({ onOpenTerminal }: { onOpenTerminal?: () =
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="bg-black/80 border border-gray-800 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-        <div className="flex items-center gap-3 overflow-hidden">
+        <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
           <div className="px-2.5 py-1 bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-xs font-bold rounded shrink-0">
             GUILD INTEL
           </div>
-          <div className="text-xs text-gray-300 font-mono transition-opacity duration-300 truncate">
+          <div className="text-xs text-gray-300 font-mono transition-opacity duration-300 line-clamp-2 sm:truncate sm:line-clamp-none">
             {TIPS[index]}
           </div>
         </div>
         {onOpenTerminal && (
           <button
             onClick={onOpenTerminal}
-            className="text-xs text-gray-400 hover:text-yellow-400 transition-colors font-mono shrink-0 border border-gray-800 hover:border-yellow-400/50 px-3 py-1 rounded"
+            className="text-xs text-gray-400 hover:text-yellow-400 transition-colors font-mono shrink-0 border border-gray-800 hover:border-yellow-400/50 px-3 py-2 min-h-[40px] flex items-center justify-center rounded-lg"
           >
             [ OPEN TERMINAL ]
           </button>

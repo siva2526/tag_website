@@ -269,32 +269,32 @@ export default function Home() {
       />
 
       {/* Hero Section - Game Lobby */}
-      <section className="relative pt-16 pb-20 px-8">
+      <section className="relative pt-8 sm:pt-16 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Column - Player Info */}
             <div className="order-2 lg:order-1">
               {/* Server Status */}
-              <div className="inline-flex items-center gap-3 px-4 py-2 bg-black/60 border-2 border-yellow-400/30 rounded-lg mb-6">
+              <div className="inline-flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-2 bg-black/60 border-2 border-yellow-400/30 rounded-lg mb-6 flex-wrap">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-yellow-400 text-sm font-bold tracking-wider">SERVER VIT-01 • ONLINE</span>
+                <span className="text-yellow-400 text-xs sm:text-sm font-bold tracking-wider">SERVER VIT-01 • ONLINE</span>
                 <span className="text-gray-500 text-xs font-mono">[842/1000]</span>
               </div>
 
               {/* Game Title */}
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-3 sm:mb-4 leading-tight">
                 <span className="text-white">TAG</span>
                 <span className="text-yellow-400 ml-2 drop-shadow-[0_0_15px_rgba(255,244,0,0.3)]">CLUB</span>
               </h1>
 
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl text-gray-400">//</span>
-                <p className="text-2xl md:text-3xl font-light text-gray-300">
+              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <span className="text-xl sm:text-2xl text-gray-400">//</span>
+                <p className="text-lg sm:text-2xl md:text-3xl font-light text-gray-300">
                   Technology &amp; Gaming Club
                 </p>
               </div>
 
-              <p className="text-gray-400 text-lg mb-8 max-w-lg leading-relaxed font-mono">
+              <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-lg leading-relaxed font-mono">
                 ⚔️ JOIN THE PREMIER TECH &amp; GAMING COLLECTIVE AT VIT VELLORE.
                 LEVEL UP YOUR SKILLS, COMPETE IN TOURNAMENTS, AND BUILD THE FUTURE.
               </p>
@@ -302,13 +302,13 @@ export default function Home() {
               {/* Character Class Selection */}
               <div className="mb-8">
                 <div className="text-xs text-gray-500 mb-3 font-mono"> &gt; SELECT YOUR CLASS</div>
-                <div className="flex gap-4">
+                <div className="flex gap-3 sm:gap-4">
                   <button
                     onClick={() => {
                       playSelect();
                       setSelectedClass('tech');
                     }}
-                    className={`relative flex-1 p-5 border-2 rounded-xl transition-all duration-300 group ${
+                    className={`relative flex-1 p-3 sm:p-5 border-2 rounded-xl transition-all duration-300 group min-h-[44px] ${
                       selectedClass === 'tech'
                         ? 'border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20'
                         : 'border-gray-800 hover:border-yellow-400/50 bg-gray-900/50'
@@ -316,9 +316,9 @@ export default function Home() {
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/10 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="relative text-center">
-                      <div className="text-3xl mb-2">⚡</div>
-                      <div className="font-bold text-base mb-1">TECH MAGE</div>
-                      <div className="text-xs text-gray-500 font-mono">WEB • CLOUD • DEV</div>
+                      <div className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">⚡</div>
+                      <div className="font-bold text-sm sm:text-base mb-1">TECH MAGE</div>
+                      <div className="text-[10px] sm:text-xs text-gray-500 font-mono">WEB • CLOUD • DEV</div>
                     </div>
                     {selectedClass === 'tech' && (
                       <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping"></div>
@@ -330,7 +330,7 @@ export default function Home() {
                       playSelect();
                       setSelectedClass('gaming');
                     }}
-                    className={`relative flex-1 p-5 border-2 rounded-xl transition-all duration-300 group ${
+                    className={`relative flex-1 p-3 sm:p-5 border-2 rounded-xl transition-all duration-300 group min-h-[44px] ${
                       selectedClass === 'gaming'
                         ? 'border-green-500 bg-green-500/10 shadow-lg shadow-green-500/20'
                         : 'border-gray-800 hover:border-green-500/50 bg-gray-900/50'
@@ -338,9 +338,9 @@ export default function Home() {
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="relative text-center">
-                      <div className="text-3xl mb-2">🎮</div>
-                      <div className="font-bold text-base mb-1">GAMING WARRIOR</div>
-                      <div className="text-xs text-gray-500 font-mono">ESPORTS • CONTENT • STRATEGY</div>
+                      <div className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">🎮</div>
+                      <div className="font-bold text-sm sm:text-base mb-1">GAMING WARRIOR</div>
+                      <div className="text-[10px] sm:text-xs text-gray-500 font-mono">ESPORTS • CONTENT</div>
                     </div>
                     {selectedClass === 'gaming' && (
                       <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
@@ -352,7 +352,7 @@ export default function Home() {
 
             {/* Right Column - Character Display */}
             <div className="order-1 lg:order-2 relative">
-              <div className="relative aspect-square max-w-md mx-auto">
+              <div className="relative aspect-square max-w-[280px] sm:max-w-md mx-auto">
                 {/* Animated Rings */}
                 <div className="absolute inset-0 border-2 border-yellow-400/20 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
                 <div className="absolute inset-[5%] border border-yellow-400/30 rounded-full animate-spin" style={{ animationDuration: '12s' }}></div>
@@ -388,10 +388,10 @@ export default function Home() {
       </section>
 
       {/* Stats Dashboard */}
-      <section className="py-12 px-8">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-black/60 border-2 border-gray-800 rounded-2xl p-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="bg-black/60 border-2 border-gray-800 rounded-2xl p-5 sm:p-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
               {stats.map((stat) => (
                 <StatItem key={stat.id} {...stat} />
               ))}
@@ -404,23 +404,23 @@ export default function Home() {
       <ProTipTicker onOpenTerminal={() => setTerminalOpen(true)} />
 
       {/* Pillars Section - Guild Classes */}
-      <section id="about" className="py-20 px-8">
+      <section id="about" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-3 mb-4">
-              <span className="text-yellow-400 text-2xl">⚔️</span>
-              <span className="text-gray-500 font-mono text-sm">// GUILD_CLASSES</span>
-              <span className="text-yellow-400 text-2xl">⚔️</span>
+              <span className="text-yellow-400 text-xl sm:text-2xl">⚔️</span>
+              <span className="text-gray-500 font-mono text-xs sm:text-sm">// GUILD_CLASSES</span>
+              <span className="text-yellow-400 text-xl sm:text-2xl">⚔️</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
               Our <span className="text-yellow-400">Pillars</span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-mono">
               Choose your path. Master your craft. Join the elite.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
             {pillars.map((pillar) => (
               <PillarCard key={pillar.id} {...pillar} />
             ))}
@@ -429,18 +429,18 @@ export default function Home() {
       </section>
 
       {/* Events Section - Quest Board */}
-      <section id="events" className="py-20 px-8 bg-gradient-to-b from-black to-gray-950/50">
+      <section id="events" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-950/50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-3 mb-4">
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-              <span className="text-yellow-400 font-bold text-sm tracking-wider">ACTIVE QUESTS</span>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
+              <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
+              <span className="text-yellow-400 font-bold text-xs sm:text-sm tracking-wider">ACTIVE QUESTS</span>
+              <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
               Featured <span className="text-yellow-400">Events</span>
             </h2>
-            <p className="text-gray-400 font-mono text-sm">{featuredEvents.length} QUESTS AVAILABLE</p>
+            <p className="text-gray-400 font-mono text-xs sm:text-sm">{featuredEvents.length} QUESTS AVAILABLE</p>
           </div>
 
           {featuredEvents.length > 0 ? (
@@ -485,9 +485,9 @@ export default function Home() {
       </section>
 
       {/* Join Section - Multiplayer Lobby */}
-      <section id="join" className="py-20 px-8">
+      <section id="join" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400/30 p-12">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400/30 p-6 sm:p-10 lg:p-12">
             {/* Animated Background */}
             <div className="absolute inset-0">
               <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
@@ -499,72 +499,76 @@ export default function Home() {
 
             <div className="relative z-10 text-center">
               {/* Party Status */}
-              <div className="inline-flex items-center gap-3 px-4 py-2 bg-black/60 border border-yellow-400/30 rounded-lg mb-6">
+              <div className="inline-flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-2 bg-black/60 border border-yellow-400/30 rounded-lg mb-6 flex-wrap justify-center">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-yellow-400 text-sm font-bold">MULTIPLAYER LOBBY • OPEN</span>
+                <span className="text-yellow-400 text-xs sm:text-sm font-bold">MULTIPLAYER LOBBY • OPEN</span>
                 <span className="text-gray-500 text-xs font-mono">196 ONLINE</span>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 flex flex-wrap justify-center items-center gap-2">
                 <span className="text-white">READY TO</span>
-                <span className="text-yellow-400 ml-3">JOIN THE GUILD?</span>
+                <span className="text-yellow-400">JOIN THE GUILD?</span>
               </h2>
 
-              <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto font-mono">
+              <p className="text-gray-400 text-xs sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto font-mono leading-relaxed">
                 CONNECT WITH 150+ PLAYERS. COMPETE IN TOURNAMENTS. BUILD THE FUTURE OF TECH &amp; GAMING.
               </p>
 
               {/* Social Links - Party Members */}
-              <div className="flex flex-wrap justify-center gap-6 mb-8">
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
                 <a
                   href="https://www.instagram.com/tagclub.vit"
-                  className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
+                  className="group relative p-3.5 sm:p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="Instagram"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
                   <FontAwesomeIcon
                     icon={['fab', 'instagram']}
-                    className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
+                    className="text-xl sm:text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
                   href="https://discord.com/invite/Y9cpqdvZE4"
-                  className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
+                  className="group relative p-3.5 sm:p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="Discord"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
                   <FontAwesomeIcon
                     icon={['fab', 'discord']}
-                    className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
+                    className="text-xl sm:text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
                   href="https://in.linkedin.com/company/tag-club-vit"
-                  className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
+                  className="group relative p-3.5 sm:p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="LinkedIn"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
                   <FontAwesomeIcon
                     icon={['fab', 'linkedin']}
-                    className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
+                    className="text-xl sm:text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
 
                 <a
                   href="#"
-                  className="group relative p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110"
+                  className="group relative p-3.5 sm:p-4 bg-gray-900/80 border-2 border-gray-800 rounded-xl hover:border-yellow-400 transition-all duration-300 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="GitHub"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
                   <FontAwesomeIcon
                     icon={['fab', 'github']}
-                    className="text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
+                    className="text-xl sm:text-2xl text-gray-400 group-hover:text-yellow-400 transition-colors duration-300 relative z-10"
                   />
                 </a>
               </div>
 
               {/* Contact Info - Server Address */}
-              <div className="inline-flex items-center gap-4 px-6 py-3 bg-black/60 border-2 border-gray-800 rounded-full">
+              <div className="inline-flex items-center gap-2 sm:gap-4 px-4 sm:px-6 py-2.5 sm:py-3 bg-black/60 border-2 border-gray-800 rounded-full flex-wrap justify-center text-xs sm:text-sm">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                <span className="text-gray-300 font-mono text-sm">SERVER: tag@vit.ac.in</span>
+                <span className="text-gray-300 font-mono">SERVER: tag@vit.ac.in</span>
                 <span className="text-xs text-gray-600">[GUILD_MAIL]</span>
               </div>
             </div>

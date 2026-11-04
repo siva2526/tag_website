@@ -101,16 +101,16 @@ export default function KonamiCode() {
       ))}
 
       {/* Overlay Message */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+      <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
         <div
-          className="bg-black/95 border-4 border-yellow-400 rounded-2xl px-10 py-8 text-center font-mono shadow-2xl shadow-yellow-400/40"
+          className="bg-black/95 border-4 border-yellow-400 rounded-2xl px-6 sm:px-10 py-6 sm:py-8 text-center font-mono shadow-2xl shadow-yellow-400/40 max-w-sm sm:max-w-md w-full"
           style={{ animation: 'konamiPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
         >
-          <div className="text-5xl mb-3">🎮</div>
-          <div className="text-yellow-400 text-2xl font-bold mb-2">CHEAT CODE ACTIVATED!</div>
-          <div className="text-white text-lg mb-1">You found the legendary secret!</div>
-          <div className="text-green-400 font-bold text-2xl">+9,999 XP</div>
-          <div className="text-gray-500 text-xs mt-3 font-mono">↑↑↓↓←→←→BA</div>
+          <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">🎮</div>
+          <div className="text-yellow-400 text-lg sm:text-2xl font-bold mb-1.5 sm:mb-2 leading-tight">CHEAT CODE ACTIVATED!</div>
+          <div className="text-white text-sm sm:text-lg mb-1">You found the legendary secret!</div>
+          <div className="text-green-400 font-bold text-xl sm:text-2xl">+9,999 XP</div>
+          <div className="text-gray-500 text-xs mt-2.5 sm:mt-3 font-mono">↑↑↓↓←→←→BA</div>
         </div>
       </div>
 

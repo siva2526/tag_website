@@ -362,10 +362,10 @@ export default function EventsPage() {
               </span>
               <div className="w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4">
               Guild <span className="text-yellow-400">Events</span>
             </h1>
-            <p className="text-gray-400 max-w-2xl mx-auto font-mono text-sm sm:text-base">
+            <p className="text-gray-400 max-w-2xl mx-auto font-mono text-xs sm:text-sm md:text-base px-2">
               Browse all tactical tournaments, development jams, and hackathons hosted by TAG Club VIT.
             </p>
           </div>
@@ -379,7 +379,7 @@ export default function EventsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search quest by title, game, or keywords..."
-                className="w-full bg-black/80 border-2 border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors shadow-lg"
+                className="w-full bg-black/80 border-2 border-gray-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors shadow-lg min-h-[44px]"
               />
               {searchQuery && (
                 <button
@@ -392,8 +392,8 @@ export default function EventsPage() {
             </div>
 
             {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-              <span className="text-gray-500 uppercase font-bold mr-1">PILLAR:</span>
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs">
+              <span className="text-gray-500 uppercase font-bold mr-1 text-[11px] sm:text-xs">PILLAR:</span>
               {(['all', 'Technology', 'Gaming'] as const).map((cat) => (
                 <button
                   key={cat}
@@ -401,7 +401,7 @@ export default function EventsPage() {
                     playBlip();
                     setCategoryFilter(cat);
                   }}
-                  className={`px-3 py-1.5 rounded-lg font-bold transition-all border ${
+                  className={`px-3 py-2 sm:py-1.5 rounded-lg font-bold transition-all border min-h-[40px] flex items-center ${
                     categoryFilter === cat
                       ? cat === 'Technology'
                         ? 'border-yellow-400 bg-yellow-400/20 text-yellow-400'
@@ -429,7 +429,7 @@ export default function EventsPage() {
                     playSelect();
                     setActiveTab(tab.key);
                   }}
-                  className={`relative flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border-2 ${
+                  className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 border-2 min-h-[44px] ${
                     activeTab === tab.key
                       ? 'border-yellow-400 bg-yellow-400/10 text-yellow-400 shadow-lg shadow-yellow-400/20'
                       : 'border-gray-800 text-gray-400 hover:border-gray-600 hover:text-gray-200 bg-black/40'
@@ -438,7 +438,7 @@ export default function EventsPage() {
                   <span>{tab.icon}</span>
                   <span>{tab.label}</span>
                   <span
-                    className={`text-xs px-1.5 py-0.5 rounded-full font-mono ${
+                    className={`text-[11px] sm:text-xs px-1.5 py-0.5 rounded-full font-mono ${
                       activeTab === tab.key
                         ? 'bg-yellow-400/20 text-yellow-400'
                         : 'bg-gray-800 text-gray-500'
@@ -480,24 +480,24 @@ export default function EventsPage() {
           </div>
 
           {/* Telemetry Stats Row */}
-          <div className="mt-14 grid grid-cols-3 gap-4 max-w-lg mx-auto">
-            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-blue-400 font-mono">
+          <div className="mt-14 grid grid-cols-3 gap-2 sm:gap-4 max-w-lg mx-auto">
+            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-2.5 sm:p-4">
+              <div className="text-xl sm:text-2xl font-bold text-blue-400 font-mono">
                 {countByStatus('upcoming')}
               </div>
-              <div className="text-[11px] text-gray-500 font-mono mt-1">UPCOMING</div>
+              <div className="text-[10px] sm:text-[11px] text-gray-500 font-mono mt-1">UPCOMING</div>
             </div>
-            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-green-400 font-mono">
+            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-2.5 sm:p-4">
+              <div className="text-xl sm:text-2xl font-bold text-green-400 font-mono">
                 {countByStatus('ongoing')}
               </div>
-              <div className="text-[11px] text-gray-500 font-mono mt-1">ACTIVE</div>
+              <div className="text-[10px] sm:text-[11px] text-gray-500 font-mono mt-1">ACTIVE</div>
             </div>
-            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-gray-400 font-mono">
+            <div className="text-center bg-black/60 border border-gray-800 rounded-xl p-2.5 sm:p-4">
+              <div className="text-xl sm:text-2xl font-bold text-gray-400 font-mono">
                 {countByStatus('completed')}
               </div>
-              <div className="text-[11px] text-gray-500 font-mono mt-1">COMPLETED</div>
+              <div className="text-[10px] sm:text-[11px] text-gray-500 font-mono mt-1">COMPLETED</div>
             </div>
           </div>
         </div>

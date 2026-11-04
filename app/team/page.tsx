@@ -275,7 +275,7 @@ export default function TeamPage() {
             </div>
 
             {/* Quick Filter Tabs for Seasons */}
-            <div className="flex gap-1.5 mb-3 text-[11px]">
+            <div className="flex gap-1.5 mb-3 text-xs sm:text-[11px]">
               {(['all', 'current', 'legacy'] as const).map((filter) => (
                 <button
                   key={filter}
@@ -283,7 +283,7 @@ export default function TeamPage() {
                     playBlip();
                     setSeasonFilter(filter);
                   }}
-                  className={`flex-1 py-1 px-2 rounded font-bold uppercase transition-all ${
+                  className={`flex-1 py-2 sm:py-1 px-2 rounded font-bold uppercase transition-all min-h-[40px] flex items-center justify-center ${
                     seasonFilter === filter
                       ? 'bg-yellow-400 text-black shadow'
                       : 'bg-gray-900 text-gray-400 hover:text-white border border-gray-800'
@@ -295,7 +295,7 @@ export default function TeamPage() {
             </div>
 
             {/* Scrollable Season List */}
-            <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
+            <div className="space-y-2 max-h-[300px] lg:max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
               {filteredSeasons.length === 0 ? (
                 <div className="text-center py-8 text-xs text-gray-600">
                   No seasons match &quot;{seasonSearch}&quot;
@@ -387,7 +387,7 @@ export default function TeamPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="hidden sm:flex items-center gap-3 shrink-0">
                     <div className="text-right">
                       <div className="text-2xl sm:text-3xl font-bold text-yellow-400 font-mono">
                         {activeSeason.label}
@@ -440,7 +440,7 @@ export default function TeamPage() {
                       playBlip();
                       setMemberClassFilter(tab.key as typeof memberClassFilter);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                    className={`px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border min-h-[40px] flex items-center ${
                       memberClassFilter === tab.key
                         ? 'border-yellow-400 bg-yellow-400/15 text-yellow-400 shadow-md'
                         : 'border-gray-800 bg-black/60 text-gray-400 hover:text-white'
@@ -458,7 +458,7 @@ export default function TeamPage() {
                   value={memberSearch}
                   onChange={(e) => setMemberSearch(e.target.value)}
                   placeholder="Filter officers by name..."
-                  className="w-full bg-black/80 border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400 transition-colors min-h-[44px]"
                 />
                 {memberSearch && (
                   <button

@@ -93,8 +93,8 @@ export default function Navbar({
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 py-3'
-          : 'bg-black/90 backdrop-blur-sm py-5'
+          ? 'bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 py-2 sm:py-3'
+          : 'bg-black/90 backdrop-blur-sm py-3 sm:py-5'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -102,15 +102,15 @@ export default function Navbar({
             <div className="flex items-center">
               <div onClick={handleLogoClick} className="cursor-pointer">
                 <Link href="/" className="flex items-center gap-3 group">
-                  {/* Logo Image with Game HUD Effect */}
-                  <div className="relative transition-all duration-300 group-hover:scale-110">
+                  {/* Logo Image with Responsive Sizing & Game HUD Effect */}
+                  <div className="relative transition-all duration-300 group-hover:scale-105 w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center">
                     <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <Image
                       src={resolvedLogo}
                       alt={logoAlt}
-                      width={100}
-                      height={100}
-                      className="object-contain relative z-10"
+                      width={80}
+                      height={80}
+                      className="object-contain relative z-10 max-h-full max-w-full"
                       priority
                     />
                   </div>
@@ -170,7 +170,7 @@ export default function Navbar({
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Desktop CTA Button */}
               <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                 <button
@@ -182,18 +182,19 @@ export default function Navbar({
                 </button>
               </a>
 
-              {/* Mobile SFX Toggle */}
+              {/* Mobile SFX Toggle with 44px hit target */}
               <button
                 onClick={toggleSound}
-                className="lg:hidden p-2 rounded-lg bg-gray-900 border border-gray-800 text-xs"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-gray-900 border border-gray-800 text-sm hover:border-yellow-400/60 transition-colors"
                 title="Toggle SFX"
+                aria-label="Toggle sound effects"
               >
                 {sfxOn ? '🔊' : '🔇'}
               </button>
 
-              {/* Mobile Menu Toggle */}
+              {/* Mobile Menu Toggle with 44px hit target */}
               <button
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg hover:bg-gray-800 transition-colors border border-gray-700"
                 onClick={() => {
                   playBlip();
                   setMobileMenuOpen(!mobileMenuOpen);
@@ -219,13 +220,13 @@ export default function Navbar({
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 animate-in slide-in-from-top duration-300">
-            <div className="px-6 py-6 space-y-4">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b-2 border-yellow-400/30 animate-in slide-in-from-top duration-300 shadow-2xl">
+            <div className="px-5 py-6 space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="block py-3 text-gray-300 hover:text-yellow-400 transition-colors text-lg font-bold border-b border-gray-800 last:border-b-0"
+                  className="block py-3 px-2 text-gray-300 hover:text-yellow-400 transition-colors text-base font-bold border-b border-gray-800 last:border-b-0 min-h-[44px] flex items-center"
                   onClick={() => {
                     playSelect();
                     setMobileMenuOpen(false);
@@ -235,11 +236,11 @@ export default function Navbar({
                 </Link>
               ))}
               {/* DISCORD BUTTON */}
-              <div className="pt-4">
+              <div className="pt-3">
                 <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
                   <button
                     onClick={() => playSelect()}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-yellow-400 text-black font-bold text-sm rounded-xl hover:bg-yellow-300 transition-colors min-h-[44px]"
                   >
                     <span>🎮</span>
                     JOIN DISCORD
@@ -251,8 +252,8 @@ export default function Navbar({
         )}
       </nav>
 
-      {/* Spacer */}
-      <div className="h-24" />
+      {/* Spacer to match responsive navbar height */}
+      <div className="h-20 sm:h-24" />
     </>
   );
 }

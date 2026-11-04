@@ -120,27 +120,36 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
     <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
       <div className="w-full max-w-2xl bg-black border-2 border-yellow-400 rounded-xl overflow-hidden shadow-2xl shadow-yellow-400/20 font-mono text-sm">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-gray-900 border-b border-gray-800">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-gray-900 border-b border-gray-800">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-red-500 rounded-full inline-block cursor-pointer" onClick={onClose} />
+            <button
+              onClick={onClose}
+              className="w-7 h-7 flex items-center justify-center -ml-1 rounded hover:bg-gray-800 transition-colors"
+              aria-label="Close terminal"
+            >
+              <span className="w-3 h-3 bg-red-500 rounded-full inline-block" />
+            </button>
             <span className="w-3 h-3 bg-yellow-500 rounded-full inline-block" />
             <span className="w-3 h-3 bg-green-500 rounded-full inline-block" />
-            <span className="ml-2 text-xs text-gray-400 font-mono">guild-shell ~ (bash)</span>
+            <span className="ml-2 text-xs text-gray-400 font-mono truncate max-w-[140px] sm:max-w-none">
+              guild-shell ~ (bash)
+            </span>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-yellow-400 transition-colors text-xs font-bold"
+            className="text-gray-400 hover:text-yellow-400 transition-colors text-xs font-bold px-3 py-2 min-h-[40px] flex items-center justify-center"
+            aria-label="Close terminal"
           >
             [ESC / ✕]
           </button>
         </div>
 
         {/* Terminal Body */}
-        <div className="p-5 max-h-[380px] overflow-y-auto space-y-2 select-text">
+        <div className="p-4 sm:p-5 max-h-[50vh] sm:max-h-[380px] overflow-y-auto space-y-2 select-text">
           {logs.map(log => (
             <div
               key={log.id}
-              className={`whitespace-pre-wrap leading-relaxed ${
+              className={`whitespace-pre-wrap leading-relaxed text-xs sm:text-sm ${
                 log.type === 'input'
                   ? 'text-yellow-400 font-bold'
                   : log.type === 'success'
@@ -157,7 +166,7 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
         </div>
 
         {/* Command Input Form */}
-        <form onSubmit={handleCommand} className="flex items-center gap-2 px-4 py-3 bg-gray-950 border-t border-gray-800">
+        <form onSubmit={handleCommand} className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-950 border-t border-gray-800">
           <span className="text-yellow-400 font-bold">&gt;</span>
           <input
             ref={inputRef}
@@ -165,9 +174,12 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="type 'sudo join tag' or 'help'..."
-            className="flex-1 bg-transparent text-white font-mono outline-none text-sm placeholder:text-gray-600"
+            className="flex-1 bg-transparent text-white font-mono outline-none text-xs sm:text-sm placeholder:text-gray-600 min-h-[40px]"
           />
-          <button type="submit" className="text-xs text-yellow-400 hover:text-yellow-300 font-bold px-2 py-1 bg-yellow-400/10 rounded border border-yellow-400/30">
+          <button
+            type="submit"
+            className="text-xs text-yellow-400 hover:text-yellow-300 font-bold px-3 py-2 min-h-[40px] bg-yellow-400/10 rounded-lg border border-yellow-400/30 transition-colors shrink-0"
+          >
             EXECUTE
           </button>
         </form>

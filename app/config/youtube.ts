@@ -24,7 +24,7 @@ export const YOUTUBE_CONFIG = {
 
   // Fallback / Spotlight video ID for "Play of the Week" (e.g. 11-char YouTube ID)
   featuredVideoId:
-    process.env.NEXT_PUBLIC_YOUTUBE_FEATURED_VIDEO_ID || 'dQw4w9WgXcQ',
+    process.env.NEXT_PUBLIC_YOUTUBE_FEATURED_VIDEO_ID || 'E4WlUXrJgy4',
 
   // Official Club YouTube Channel link
   channelUrl:
@@ -59,11 +59,11 @@ export function getYouTubeEmbedUrl({
   const base = 'https://www.youtube-nocookie.com/embed';
   const autoParam = autoplay ? '1' : '0';
 
-  if (playlistId) {
+  if (playlistId && !playlistId.startsWith('PL_PLACEHOLDER')) {
     return `${base}/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=${autoParam}&rel=0&modestbranding=1`;
   }
 
-  const id = videoId || YOUTUBE_CONFIG.featuredVideoId;
+  const id = videoId || YOUTUBE_CONFIG.featuredVideoId || 'E4WlUXrJgy4';
   return `${base}/${encodeURIComponent(id)}?autoplay=${autoParam}&rel=0&modestbranding=1`;
 }
 
@@ -71,7 +71,7 @@ export function getYouTubeEmbedUrl({
  * Returns a high-res or high-quality YouTube thumbnail for a given video ID.
  */
 export function getYouTubeThumbnailUrl(videoId?: string): string {
-  const id = videoId || YOUTUBE_CONFIG.featuredVideoId;
+  const id = videoId || YOUTUBE_CONFIG.featuredVideoId || 'E4WlUXrJgy4';
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 }
 
@@ -85,10 +85,10 @@ export function getYouTubeWatchUrl({
   videoId?: string;
   playlistId?: string;
 }): string {
-  if (playlistId) {
+  if (playlistId && !playlistId.startsWith('PL_PLACEHOLDER')) {
     return `https://www.youtube.com/playlist?list=${encodeURIComponent(playlistId)}`;
   }
-  const id = videoId || YOUTUBE_CONFIG.featuredVideoId;
+  const id = videoId || YOUTUBE_CONFIG.featuredVideoId || 'E4WlUXrJgy4';
   return `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
 }
 
