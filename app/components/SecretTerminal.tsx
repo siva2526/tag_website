@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useToast } from './Toast';
+import { triggerEasterEgg } from './EasterEggs';
+import { openCommandPalette } from './CommandPalette';
 
 interface SecretTerminalProps {
   isOpen: boolean;
@@ -46,10 +48,61 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
       case 'help':
         nextLogs.push({
           id: Date.now() + 1,
-          text: 'AVAILABLE COMMANDS:\n • sudo join tag  - Join the guild on Discord\n • xp             - Claim free guild XP\n • status         - Check server VIT-01 telemetry\n • whoami         - View player profile\n • clear          - Clear terminal display\n • exit           - Close terminal interface',
+          text: 'AVAILABLE DIRECTIVES:\n • sudo join tag - Join Discord guild\n • palette       - Open Command Palette (Ctrl+K)\n • xp            - Claim free guild XP\n • status        - Check cluster telemetry\n • whoami        - View player profile\n • clear         - Clear terminal display\n\nCHEATS & EASTER EGGS:\n • youdied       - Elden Ring death screen\n • 500kg         - Helldivers 2 orbital stratagem\n • ace           - Valorant 5K ace kill fanfare\n • wish          - Genshin/Star Rail 5-star pull\n • sandevistan   - Cyberpunk neural dilation\n • diamonds      - Minecraft advancement\n • exit          - Close terminal',
           type: 'output',
         });
         break;
+
+      case 'palette':
+      case 'search':
+      case 'cmd':
+        onClose();
+        openCommandPalette();
+        return;
+
+      case 'eldenring':
+      case 'youdied':
+        onClose();
+        triggerEasterEgg('eldenring');
+        return;
+
+      case 'helldivers':
+      case '500kg':
+      case 'bomb':
+        onClose();
+        triggerEasterEgg('helldivers');
+        return;
+
+      case 'valorant':
+      case 'ace':
+        onClose();
+        triggerEasterEgg('valorant');
+        return;
+
+      case 'gacha':
+      case 'wish':
+      case 'genshin':
+        onClose();
+        triggerEasterEgg('gacha');
+        return;
+
+      case 'sandevistan':
+      case 'sandy':
+      case 'cyberpunk':
+        onClose();
+        triggerEasterEgg('sandevistan');
+        return;
+
+      case 'minecraft':
+      case 'diamonds':
+        onClose();
+        triggerEasterEgg('minecraft');
+        return;
+
+      case 'konami':
+        onClose();
+        triggerEasterEgg('konami');
+        return;
 
       case 'sudo join tag':
       case 'join tag':

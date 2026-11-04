@@ -11,6 +11,8 @@ import CursorTrail from './components/CursorTrail';
 import ScrollProgress from './components/ScrollProgress';
 import AFKDetector from './components/AFKDetector';
 import BackToTop from './components/BackToTop';
+import CommandPalette from './components/CommandPalette';
+import EasterEggOverlay from './components/EasterEggs';
 import { ToastProvider } from './components/Toast';
 
 config.autoAddCss = false;
@@ -54,6 +56,8 @@ export default function RootLayout({
           <CursorTrail />
           <AFKDetector />
           <BackToTop />
+          <CommandPalette />
+          <EasterEggOverlay />
           {children}
         </ToastProvider>
       </body>

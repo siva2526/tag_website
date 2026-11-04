@@ -10,6 +10,7 @@ import { faGithub, faLinkedin, faDiscord, faInstagram } from '@fortawesome/free-
 import { useToast } from './Toast';
 import { playBlip, playSelect, isSoundEnabled, setSoundEnabled } from './SoundEffects';
 import { getAssetPath } from '../utils/asset';
+import { openCommandPalette } from './CommandPalette';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -140,6 +141,16 @@ export default function Navbar({
                 </Link>
               ))}
 
+              {/* Command Palette Button */}
+              <button
+                onClick={() => openCommandPalette()}
+                className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-lg border border-gray-800 text-gray-400 bg-gray-900/60 hover:border-yellow-400/60 hover:text-yellow-400 transition-all"
+                title="Open Command Palette (Ctrl+K / Cmd+K)"
+              >
+                <span>🔍</span>
+                <span className="text-[11px] text-gray-500 font-bold">⌘K</span>
+              </button>
+
               {/* Sound FX Audio Toggle */}
               <button
                 onClick={toggleSound}
@@ -181,6 +192,16 @@ export default function Navbar({
                   JOIN DISCORD
                 </button>
               </a>
+
+              {/* Mobile Search / Palette Toggle */}
+              <button
+                onClick={() => openCommandPalette()}
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-gray-900 border border-gray-800 text-sm hover:border-yellow-400/60 transition-colors text-gray-300"
+                title="Search / Command Palette"
+                aria-label="Open Command Palette"
+              >
+                🔍
+              </button>
 
               {/* Mobile SFX Toggle with 44px hit target */}
               <button
@@ -235,6 +256,22 @@ export default function Navbar({
                   {link.name}
                 </Link>
               ))}
+              {/* Mobile Command Palette Launcher */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openCommandPalette();
+                }}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-gray-800 bg-gray-900/80 text-gray-300 hover:text-yellow-400 text-sm font-bold min-h-[44px]"
+              >
+                <span className="flex items-center gap-2">
+                  <span>🔍</span> Command Palette &amp; Cheats
+                </span>
+                <kbd className="text-[10px] bg-black px-2 py-0.5 rounded text-gray-500 border border-gray-800">
+                  Ctrl+K
+                </kbd>
+              </button>
+
               {/* DISCORD BUTTON */}
               <div className="pt-3">
                 <a href="https://discord.com/invite/Y9cpqdvZE4" target="_blank" rel="noopener noreferrer">
