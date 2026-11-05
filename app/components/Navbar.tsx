@@ -119,9 +119,9 @@ export default function Navbar({
                   </div>
                   <div className="hidden sm:flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="font-extrabold tracking-tight text-white text-base">TAG</span>
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-yellow-400/15 text-yellow-400 border border-yellow-400/30">
-                        COLLECTIVE
+                      <span className="font-arcade text-xs text-white tracking-wider">TAG</span>
+                      <span className="text-[9px] font-arcade font-bold px-1.5 py-0.5 rounded bg-yellow-400 text-black border border-black shadow-[1px_1px_0px_0px_#ffffff]">
+                        GUILD
                       </span>
                     </div>
                     <span className="text-[10px] text-zinc-400 tracking-wider font-mono">
@@ -185,7 +185,7 @@ export default function Navbar({
                 title="Click for Guild Telemetry / Secret Terminal"
               >
                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34d399]" />
-                <span className="text-[11px] text-zinc-400 font-mono group-hover:text-cyan-400 transition-colors">LVL.42</span>
+                <span className="text-xs text-zinc-300 font-terminal group-hover:text-cyan-400 transition-colors tracking-widest">LVL.42</span>
                 <span className="text-xs text-yellow-400 font-mono">{characterFrames[frame]}</span>
               </div>
             </div>

@@ -435,9 +435,9 @@ export default function CommandPalette() {
               <div className="flex items-center gap-2">
                 <span className="text-xl">🏆</span>
                 <div>
-                  <h3 className="font-bold text-base text-white">Guild Secrets &amp; Achievements</h3>
-                  <div className="text-xs font-mono text-yellow-400">
-                    {unlockedAchievements.length} / {ACHIEVEMENTS.length} Discovered Through Interactions
+                  <h3 className="font-arcade text-xs text-white">Guild Secrets &amp; Achievements</h3>
+                  <div className="font-terminal text-sm text-yellow-400">
+                    {unlockedAchievements.length} / {ACHIEVEMENTS.length} DISCOVERED THROUGH INTERACTIONS
                   </div>
                 </div>
               </div>

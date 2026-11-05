@@ -23,10 +23,10 @@ export default function ProTipTicker({ onOpenTerminal }: { onOpenTerminal?: () =
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
-      <div className="bg-zinc-950/70 border border-white/[0.08] backdrop-blur-md rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg hover:border-yellow-400/30 transition-all">
+      <div className="bg-[#0c0c14] border-2 border-black rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.08)]">
         <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-[11px] font-mono font-bold rounded-md shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-yellow-400 text-black text-[9px] font-arcade font-bold rounded border border-black shadow-[1px_1px_0px_0px_#fff] shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
             GUILD INTEL
           </div>
           <div className="text-xs text-zinc-300 font-mono transition-opacity duration-300 line-clamp-2 sm:truncate sm:line-clamp-none">
@@ -36,7 +36,7 @@ export default function ProTipTicker({ onOpenTerminal }: { onOpenTerminal?: () =
         {onOpenTerminal && (
           <button
             onClick={onOpenTerminal}
-            className="text-xs text-zinc-400 hover:text-yellow-400 transition-colors font-mono shrink-0 border border-white/[0.08] hover:border-yellow-400/40 bg-zinc-900/60 hover:bg-zinc-900 px-3 py-1.5 min-h-[36px] flex items-center justify-center rounded-lg"
+            className="text-[9px] text-yellow-400 font-arcade shrink-0 border-2 border-black bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 min-h-[36px] flex items-center justify-center rounded-lg shadow-[2px_2px_0px_0px_#fff400] transition-all active:translate-x-0.5 active:translate-y-0.5"
           >
             TERMINAL `~`
           </button>

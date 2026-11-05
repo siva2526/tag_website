@@ -12,6 +12,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-arcade: var(--font-arcade);
+  --font-terminal: var(--font-terminal);
+}
+
+/* ─── Retro Font Utilities ─────────────────────────────────────────────────── */
+/* Press Start 2P — 8-bit pixel font: headings, labels, section markers        */
+.font-arcade {
+  font-family: var(--font-arcade), 'Courier New', monospace;
+  letter-spacing: 0.04em;
+}
+
+/* VT323 — CRT terminal font: stats, counters, telemetry, monospace readouts   */
+.font-terminal {
+  font-family: var(--font-terminal), 'Courier New', monospace;
+  letter-spacing: 0.06em;
+  font-size: 1.1em; /* VT323 reads slightly small at same px */
 }
 
 html {

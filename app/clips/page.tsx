@@ -284,10 +284,10 @@ export default function ClipsPage() {
 
         {/* Page Title */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/10 text-yellow-400 text-xs font-mono mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border-2 border-black text-yellow-400 text-xs font-arcade mb-3 shadow-[2px_2px_0px_0px_#fff400]">
             <span>// GUILD HIGHLIGHTS VAULT</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3">
+          <h1 className="font-arcade text-2xl sm:text-3xl md:text-4xl tracking-tight text-white mb-4 leading-relaxed">
             REPLAY <span className="text-yellow-400">CINEMA &amp; HIGHLIGHTS</span>
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base px-2">

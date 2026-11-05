@@ -27,10 +27,10 @@ export default function Footer() {
                 />
               </div>
               <div>
-                <div className="font-black text-white text-base tracking-tight flex items-center gap-2">
-                  TAG CLUB <span className="text-[10px] font-mono text-black font-extrabold px-1.5 py-0.5 rounded bg-yellow-400 border border-black shadow-[1px_1px_0px_0px_#fff]">VIT VELLORE</span>
+                <div className="font-arcade text-white text-xs tracking-wider flex items-center gap-2">
+                  TAG CLUB <span className="text-[9px] font-arcade text-black font-extrabold px-1.5 py-0.5 rounded bg-yellow-400 border border-black shadow-[1px_1px_0px_0px_#fff]">VIT VELLORE</span>
                 </div>
-                <div className="text-xs text-zinc-400 font-mono">Technology &amp; Gaming Collective</div>
+                <div className="text-xs text-zinc-400 font-mono mt-1">Technology &amp; Gaming Collective</div>
               </div>
             </div>
             <p className="text-zinc-400 text-xs sm:text-sm max-w-md leading-relaxed">
@@ -65,7 +65,7 @@ export default function Footer() {
 
           {/* Quick Links Column */}
           <div>
-            <div className="text-xs font-mono font-bold text-yellow-400 tracking-wider uppercase mb-3">
+            <div className="text-[10px] font-arcade text-yellow-400 tracking-wider uppercase mb-3">
               // SECTORS
             </div>
             <div className="flex flex-col space-y-2">
@@ -89,22 +89,22 @@ export default function Footer() {
 
           {/* Telemetry / Node Info */}
           <div>
-            <div className="text-xs font-mono font-bold text-cyan-400 tracking-wider uppercase mb-3">
+            <div className="text-[10px] font-arcade text-cyan-400 tracking-wider uppercase mb-3">
               // TELEMETRY
             </div>
-            <div className="space-y-2.5 text-xs text-zinc-400">
+            <div className="space-y-2 text-zinc-300 font-terminal text-sm">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-                <span className="font-mono text-zinc-300">NODE VIT-01: ONLINE</span>
+                <span className="text-zinc-200">NODE VIT-01: ONLINE</span>
               </div>
-              <div className="font-mono text-zinc-400">
-                DISCORD: <span className="text-zinc-300">150+ GUILD MEMBERS</span>
+              <div>
+                DISCORD: <span className="text-zinc-200">150+ GUILD MEMBERS</span>
               </div>
-              <div className="font-mono text-zinc-400">
+              <div>
                 UPTIME: <span className="text-yellow-400">99.9% (SEASON {currentYear})</span>
               </div>
               <div className="pt-2">
-                <span className="text-[11px] font-mono px-2 py-1 rounded bg-zinc-950 border border-zinc-700 text-zinc-400 shadow-[2px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                <span className="text-xs font-terminal px-2 py-1 rounded bg-zinc-950 border border-zinc-700 text-zinc-400 shadow-[2px_2px_0px_0px_rgba(255,255,255,0.1)]">
                   BUILD v4.2.0 • PROD
                 </span>
               </div>
