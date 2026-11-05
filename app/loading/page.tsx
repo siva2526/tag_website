@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Loading() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [frame, setFrame] = useState(0);
-  const [playerId, setPlayerId] = useState('');
+  const [playerId] = useState(() => (typeof window !== 'undefined' ? 'TAG' + Math.floor(Math.random() * 10000).toString().padStart(4, '0') : 'TAG0042'));
 
   useEffect(() => {
     // Simulate loading progress
@@ -22,7 +23,7 @@ export default function Loading() {
     }, 200);
 
     // Generate deterministic random player ID (client only)
-    setPlayerId('TAG' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'));
+    // Player ID initialized via state
 
     return () => {
       clearInterval(progressInterval);
@@ -179,7 +180,7 @@ export default function Loading() {
               <p className="text-gray-400">
                 <span className="text-yellow-400">$</span> git checkout feature/new-level
               </p>
-              <p className="text-gray-500">  Switched to branch 'feature/new-level'</p>
+              <p className="text-gray-500">  Switched to branch &apos;feature/new-level&apos;</p>
               <p className="text-gray-400">
                 <span className="text-yellow-400">$</span> npm run build
               </p>
@@ -197,7 +198,7 @@ export default function Loading() {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a 
+            <Link 
               href="/"
               className="group relative overflow-hidden bg-gray-900 border-2 border-gray-800 hover:border-yellow-400 rounded-lg p-4 transition-all duration-300 hover:scale-105"
             >
@@ -205,7 +206,7 @@ export default function Loading() {
               <div className="relative flex items-center justify-center gap-3">
                 <span className="font-bold">RETURN TO LOBBY</span>
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* Player Stats Footer */}

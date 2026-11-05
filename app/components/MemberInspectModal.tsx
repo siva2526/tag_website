@@ -41,7 +41,7 @@ function StatRadarChart({
   return (
     <div className="flex flex-col items-center justify-center p-3 bg-zinc-950/70 border-2 border-black rounded-xl shadow-[3px_3px_0px_0px_rgba(255,255,255,0.06)]">
       <div className="w-full text-center text-[10px] font-arcade text-zinc-400 mb-2 tracking-wider">
-        // COMBAT RADAR MATRIX
+        {"// COMBAT RADAR MATRIX"}
       </div>
       <div className="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
         <svg viewBox="0 0 220 220" className="w-full h-full overflow-visible">
@@ -234,7 +234,7 @@ export default function MemberInspectModal({
 
           <div className="md:col-span-7 space-y-3.5 bg-zinc-900/60 border border-white/[0.06] rounded-xl p-4 sm:p-5">
             <div className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider mb-2">
-              // TELEMETRY &amp; MASTERY STATS
+              {"// TELEMETRY & MASTERY STATS"}
             </div>
 
             <div>

@@ -66,7 +66,7 @@ export default function Footer() {
           {/* Quick Links Column */}
           <div>
             <div className="text-[10px] font-arcade text-yellow-400 tracking-wider uppercase mb-3">
-              // SECTORS
+              {"// SECTORS"}
             </div>
             <div className="flex flex-col space-y-2">
               {[
@@ -90,7 +90,7 @@ export default function Footer() {
           {/* Telemetry / Node Info */}
           <div>
             <div className="text-[10px] font-arcade text-cyan-400 tracking-wider uppercase mb-3">
-              // TELEMETRY
+              {"// TELEMETRY"}
             </div>
             <div className="space-y-2 text-zinc-300 font-terminal text-sm">
               <div className="flex items-center gap-2">

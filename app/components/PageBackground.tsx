@@ -15,10 +15,9 @@ export function setCrtEnabled(enabled: boolean) {
 }
 
 export default function PageBackground() {
-  const [crtOn, setCrtOn] = useState(true);
+  const [crtOn, setCrtOn] = useState(() => (typeof window !== 'undefined' ? isCrtEnabled() : true));
 
   useEffect(() => {
-    setCrtOn(isCrtEnabled());
     const handleToggle = (e: Event) => {
       const customEvent = e as CustomEvent<{ enabled: boolean }>;
       setCrtOn(customEvent.detail?.enabled ?? isCrtEnabled());

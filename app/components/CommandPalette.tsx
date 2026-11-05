@@ -37,9 +37,15 @@ export default function CommandPalette() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const unlockedAchievements = useMemo(() => {
-    return typeof window !== 'undefined' ? getUnlockedAchievements() : [];
-  }, [isOpen, showAchievementsModal]);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>(() =>
+    typeof window !== 'undefined' ? getUnlockedAchievements() : []
+  );
+
+  useEffect(() => {
+    const refresh = () => setUnlockedAchievements(getUnlockedAchievements());
+    window.addEventListener('tag:achievement-unlocked', refresh);
+    return () => window.removeEventListener('tag:achievement-unlocked', refresh);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -70,9 +76,12 @@ export default function CommandPalette() {
   useEffect(() => {
     if (isOpen) {
       playSelect();
-      setQuery('');
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      const timer = setTimeout(() => {
+        setQuery('');
+        setSelectedIndex(0);
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
@@ -352,7 +361,7 @@ export default function CommandPalette() {
             Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category}>
                 <div className="text-[10px] font-mono font-bold text-yellow-400/90 tracking-widest uppercase px-3 py-1 flex items-center justify-between">
-                  <span>// {category}</span>
+                  <span>{`// ${category}`}</span>
                   <span className="text-zinc-600">[{items.length}]</span>
                 </div>
                 <div className="space-y-1.5">

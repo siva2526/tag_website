@@ -411,7 +411,7 @@ export default function EventsPage() {
 
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border-2 border-black text-yellow-400 text-xs font-arcade mb-3 shadow-[2px_2px_0px_0px_#fff400]">
-              <span>// TOURNAMENTS &amp; WORKSHOPS</span>
+              <span>{"// TOURNAMENTS & WORKSHOPS"}</span>
             </div>
             <h1 className="font-arcade text-2xl sm:text-3xl md:text-4xl tracking-tight mb-4 text-white leading-relaxed">
               GUILD <span className="text-yellow-400">QUEST BOARD</span>

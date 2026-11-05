@@ -16,16 +16,8 @@ interface ClipModalProps {
 }
 
 export default function ClipModal({ clip, onClose }: ClipModalProps) {
-  const [likes, setLikes] = useState<number>(0);
-  const [hasLiked, setHasLiked] = useState<boolean>(false);
+  const [likedClipId, setLikedClipId] = useState<string | number | null>(null);
   const { showToast } = useToast();
-
-  useEffect(() => {
-    if (clip) {
-      setLikes(clip.likes);
-      setHasLiked(false);
-    }
-  }, [clip]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -40,11 +32,13 @@ export default function ClipModal({ clip, onClose }: ClipModalProps) {
 
   if (!clip) return null;
 
+  const hasLiked = likedClipId === clip.id;
+  const likes = clip.likes + (hasLiked ? 1 : 0);
+
   const handleLike = () => {
     if (!hasLiked) {
       playPowerUp();
-      setLikes((prev) => prev + 1);
-      setHasLiked(true);
+      setLikedClipId(clip.id);
       showToast('🔥 Clip upvoted! Guild XP +50 awarded.', { type: 'xp', icon: '🔥' });
     }
   };

@@ -20,9 +20,10 @@ function getAudioContext(): AudioContext | null {
 }
 
 export function isSoundEnabled(): boolean {
-  if (typeof window === 'undefined') return true;
+  if (typeof window === 'undefined') return soundEnabled;
   const stored = localStorage.getItem('tag_sfx_enabled');
-  return stored !== null ? stored === 'true' : true;
+  if (stored !== null) soundEnabled = stored === 'true';
+  return soundEnabled;
 }
 
 export function setSoundEnabled(enabled: boolean): void {

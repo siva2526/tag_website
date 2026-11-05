@@ -63,7 +63,7 @@ export default function AFKDetector() {
       <div className="flex items-center gap-3 px-4 py-2.5 bg-[#0c0c14] border-2 border-yellow-400 rounded-xl font-mono text-xs shadow-[4px_4px_0px_0px_#fff400] transition-all hover:-translate-x-0.5 hover:-translate-y-0.5">
         <div className="w-2.5 h-2.5 bg-yellow-400 rounded-full animate-ping" />
         <span className="text-yellow-400 font-arcade text-[10px]">AFK DETECTED</span>
-        <span className="text-zinc-400 font-terminal text-sm">// CLICK OR PRESS ANY KEY TO RESUME</span>
+        <span className="text-zinc-400 font-terminal text-sm">{"// CLICK OR PRESS ANY KEY TO RESUME"}</span>
       </div>
     </div>
   );

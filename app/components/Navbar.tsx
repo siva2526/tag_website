@@ -32,15 +32,13 @@ export default function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [frame, setFrame] = useState(0);
   const [clickCount, setClickCount] = useState(0);
-  const [sfxOn, setSfxOn] = useState(true);
-  const [crtOn, setCrtOn] = useState(true);
+  const [sfxOn, setSfxOn] = useState(() => (typeof window !== 'undefined' ? isSoundEnabled() : true));
+  const [crtOn, setCrtOn] = useState(() => (typeof window !== 'undefined' ? isCrtEnabled() : true));
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { showToast } = useToast();
 
   useEffect(() => {
-    setSfxOn(isSoundEnabled());
-    setCrtOn(isCrtEnabled());
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };

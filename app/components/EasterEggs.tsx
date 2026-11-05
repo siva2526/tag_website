@@ -175,6 +175,7 @@ export default function EasterEggOverlay() {
       if (!existing.includes(id)) {
         existing.push(id);
         localStorage.setItem('tag_unlocked_achievements', JSON.stringify(existing));
+        window.dispatchEvent(new CustomEvent('tag:achievement-unlocked'));
       }
     } catch {
       // Storage unavailable

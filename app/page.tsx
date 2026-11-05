@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -295,7 +294,7 @@ export default function Home() {
               {/* Archetype Class Selector (Tactile Neo-Brutalist Switch) */}
               <div className="mb-8 p-4 rounded-2xl bg-[#0c0c14] border-2 border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)]">
                 <div className="flex items-center justify-between mb-3 text-xs font-mono font-bold text-zinc-400">
-                  <span>// SELECT ARCHETYPE:</span>
+                  <span>{"// SELECT ARCHETYPE:"}</span>
                   <span className="text-zinc-500 text-[11px] font-normal">10 PITY COUNTER</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -460,7 +459,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border-2 border-black text-yellow-400 text-xs font-arcade mb-3 shadow-[2px_2px_0px_0px_#fff400]">
-              <span>// GUILD PILLARS</span>
+              <span>{"// GUILD PILLARS"}</span>
             </div>
             <h2 className="font-arcade text-lg sm:text-2xl tracking-tight text-white mb-4 leading-relaxed">
               CHOOSE YOUR <span className="text-yellow-400">SPECIALIZATION</span>
@@ -484,7 +483,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border-2 border-black text-yellow-400 text-xs font-arcade mb-2 shadow-[2px_2px_0px_0px_#fff400]">
-                <span>// QUEST DIRECTORY</span>
+                <span>{"// QUEST DIRECTORY"}</span>
               </div>
               <h2 className="font-arcade text-lg sm:text-2xl tracking-tight text-white leading-relaxed">
                 ACTIVE <span className="text-yellow-400">QUESTS &amp; EVENTS</span>
