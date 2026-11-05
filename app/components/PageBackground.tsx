@@ -1,16 +1,44 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
+export function isCrtEnabled(): boolean {
+  if (typeof window === 'undefined') return true;
+  const val = localStorage.getItem('tag-crt-enabled');
+  return val === null ? true : val === 'true';
+}
+
+export function setCrtEnabled(enabled: boolean) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('tag-crt-enabled', String(enabled));
+  window.dispatchEvent(new CustomEvent('tag:crt-toggle', { detail: { enabled } }));
+}
+
 export default function PageBackground() {
+  const [crtOn, setCrtOn] = useState(true);
+
+  useEffect(() => {
+    setCrtOn(isCrtEnabled());
+    const handleToggle = (e: Event) => {
+      const customEvent = e as CustomEvent<{ enabled: boolean }>;
+      setCrtOn(customEvent.detail?.enabled ?? isCrtEnabled());
+    };
+    window.addEventListener('tag:crt-toggle', handleToggle);
+    return () => window.removeEventListener('tag:crt-toggle', handleToggle);
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-      {/* Delicate Retro CRT Scanline Layer (Subtle 3% opacity for authentic arcade vibe without eye strain) */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.035] z-50"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7) 50%)',
-          backgroundSize: '100% 4px',
-        }}
-      />
+      {/* Delicate Retro CRT Scanline Layer (Subtle 3.5% opacity, toggleable) */}
+      {crtOn && (
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.045] z-50 transition-opacity duration-300"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.75) 50%)',
+            backgroundSize: '100% 4px',
+          }}
+        />
+      )}
 
       {/* Ambient Radial Spotlight: Cyber Yellow (Top-Center) */}
       <div

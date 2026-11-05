@@ -12,6 +12,7 @@ import { playBlip, playSelect, isSoundEnabled, setSoundEnabled } from './SoundEf
 import { getAssetPath } from '../utils/asset';
 import { openCommandPalette } from './CommandPalette';
 import { recordInteraction } from './EasterEggs';
+import { isCrtEnabled, setCrtEnabled } from './PageBackground';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -32,12 +33,14 @@ export default function Navbar({
   const [frame, setFrame] = useState(0);
   const [clickCount, setClickCount] = useState(0);
   const [sfxOn, setSfxOn] = useState(true);
+  const [crtOn, setCrtOn] = useState(true);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { showToast } = useToast();
 
   useEffect(() => {
     setSfxOn(isSoundEnabled());
+    setCrtOn(isCrtEnabled());
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -80,6 +83,17 @@ export default function Navbar({
     showToast(next ? '🔊 Tactical SFX: ONLINE' : '🔇 Tactical SFX: MUTED', {
       type: 'info',
       icon: next ? '🔊' : '🔇',
+    });
+  };
+
+  const toggleCrt = () => {
+    const next = !crtOn;
+    setCrtOn(next);
+    setCrtEnabled(next);
+    playBlip();
+    showToast(next ? '📺 Retro CRT Scanlines: ENGAGED' : '🖥️ Modern Display: CLEAN', {
+      type: 'info',
+      icon: next ? '📺' : '🖥️',
     });
   };
 
@@ -174,6 +188,20 @@ export default function Navbar({
                 <span className="text-[11px] font-bold">{sfxOn ? 'SFX' : 'MUTED'}</span>
               </button>
 
+              {/* CRT Scanline Toggle */}
+              <button
+                onClick={toggleCrt}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono rounded-lg border transition-all ${
+                  crtOn
+                    ? 'border-cyan-400/40 text-cyan-400 bg-cyan-400/10 hover:border-cyan-400 shadow-[0_0_10px_rgba(0,240,255,0.15)]'
+                    : 'border-white/[0.08] text-zinc-500 bg-zinc-900/40 hover:text-zinc-300'
+                }`}
+                title={crtOn ? 'Disable CRT Scanline Layer' : 'Enable CRT Scanline Layer'}
+              >
+                <span>📺</span>
+                <span className="text-[11px] font-bold">{crtOn ? 'CRT' : 'FLAT'}</span>
+              </button>
+
               {/* Active Player HUD Indicator */}
               <div
                 onClick={() => {
@@ -220,6 +248,16 @@ export default function Navbar({
                 aria-label="Toggle sound effects"
               >
                 {sfxOn ? '🔊' : '🔇'}
+              </button>
+
+              {/* Mobile CRT Toggle */}
+              <button
+                onClick={toggleCrt}
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg bg-zinc-900/80 border border-white/[0.08] text-sm hover:border-cyan-400/50 transition-colors"
+                title="Toggle CRT Mode"
+                aria-label="Toggle CRT scanlines"
+              >
+                📺
               </button>
 
               {/* Mobile Menu Toggle */}

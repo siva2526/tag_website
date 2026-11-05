@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useToast } from './Toast';
-import { triggerEasterEgg } from './EasterEggs';
+import { triggerEasterEgg, recordInteraction } from './EasterEggs';
 import { openCommandPalette } from './CommandPalette';
+import { playBlip, playSelect, playPowerUp } from './SoundEffects';
 
 interface SecretTerminalProps {
   isOpen: boolean;
@@ -16,12 +17,23 @@ interface CommandLog {
   type?: 'input' | 'output' | 'error' | 'success';
 }
 
+interface BattleState {
+  active: boolean;
+  bossHp: number;
+  playerHp: number;
+}
+
 export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps) {
   const [input, setInput] = useState('');
   const [logs, setLogs] = useState<CommandLog[]>([
     { id: 1, text: 'TAG GUILD TERMINAL v4.2.0 [VIT-01]', type: 'success' },
-    { id: 2, text: 'Type "help" to see available directives, or "sudo join tag" to enlist.', type: 'output' },
+    { id: 2, text: 'Type "help" to see available directives, or "boss" to initiate combat.', type: 'output' },
   ]);
+  const [battle, setBattle] = useState<BattleState>({
+    active: false,
+    bossHp: 100,
+    playerHp: 100,
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { showToast } = useToast();
@@ -41,15 +53,175 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
     const cmd = input.trim().toLowerCase();
     if (!cmd) return;
 
-    const inputLog: CommandLog = { id: Date.now(), text: `$ ${input}`, type: 'input' };
+    const inputLog: CommandLog = { id: Date.now(), text: battle.active ? `[COMBAT] > ${input}` : `$ ${input}`, type: 'input' };
     const nextLogs = [...logs, inputLog];
+
+    // Check if in active boss battle
+    if (battle.active) {
+      if (cmd === 'attack' || cmd === '1') {
+        playSelect();
+        const playerDmg = Math.floor(Math.random() * 15) + 22;
+        const newBossHp = Math.max(0, battle.bossHp - playerDmg);
+
+        if (newBossHp === 0) {
+          playPowerUp();
+          setBattle({ active: false, bossHp: 0, playerHp: 100 });
+          nextLogs.push({
+            id: Date.now() + 1,
+            text: `💥 CRITICAL STRIKE! You dealt ${playerDmg} DMG!\n\n🏆 VICTORY! [SEGFAULT DRAGON SLAIN]\nAll memory leaks resolved. Guild XP +5,000 granted!\nDirectives restored.`,
+            type: 'success',
+          });
+          showToast('🐉 BOSS DEFEATED! [SEGFAULT DRAGON SLAIN] +5,000 XP', { type: 'xp', icon: '🐉' });
+          recordInteraction('pity');
+          setLogs(nextLogs);
+          setInput('');
+          return;
+        }
+
+        const bossDmg = Math.floor(Math.random() * 12) + 12;
+        const newPlayerHp = Math.max(0, battle.playerHp - bossDmg);
+
+        if (newPlayerHp === 0) {
+          playBlip();
+          setBattle({ active: false, bossHp: 100, playerHp: 100 });
+          nextLogs.push({
+            id: Date.now() + 1,
+            text: `💥 You dealt ${playerDmg} DMG! [Dragon HP: ${newBossHp}/100]\n🔥 Dragon breathed Core Dump flames for ${bossDmg} DMG!\n\n💀 YOU DIED! Process terminated (SIGSEGV). Type "boss" to try again.`,
+            type: 'error',
+          });
+          setLogs(nextLogs);
+          setInput('');
+          return;
+        }
+
+        setBattle({ active: true, bossHp: newBossHp, playerHp: newPlayerHp });
+        nextLogs.push({
+          id: Date.now() + 1,
+          text: `🗡️ Guild Blade dealt ${playerDmg} DMG! [Dragon HP: ${newBossHp}/100]\n🔥 Dragon swiped with NullPointerException for ${bossDmg} DMG! [Your HP: ${newPlayerHp}/100]\nCommands: 1.attack | 2.cast | 3.heal | 4.flee`,
+          type: 'output',
+        });
+        setLogs(nextLogs);
+        setInput('');
+        return;
+      }
+
+      if (cmd === 'cast' || cmd === 'spell' || cmd === '2') {
+        playSelect();
+        const playerDmg = Math.floor(Math.random() * 20) + 32;
+        const newBossHp = Math.max(0, battle.bossHp - playerDmg);
+
+        if (newBossHp === 0) {
+          playPowerUp();
+          setBattle({ active: false, bossHp: 0, playerHp: 100 });
+          nextLogs.push({
+            id: Date.now() + 1,
+            text: `⚡ OVERCLOCK SHADER dealt ${playerDmg} ELECTRICAL DMG!\n\n🏆 VICTORY! [SEGFAULT DRAGON SLAIN]\nAll memory leaks resolved. Guild XP +5,000 granted!\nDirectives restored.`,
+            type: 'success',
+          });
+          showToast('🐉 BOSS DEFEATED! [SEGFAULT DRAGON SLAIN] +5,000 XP', { type: 'xp', icon: '🐉' });
+          recordInteraction('pity');
+          setLogs(nextLogs);
+          setInput('');
+          return;
+        }
+
+        const bossDmg = Math.floor(Math.random() * 15) + 16;
+        const newPlayerHp = Math.max(0, battle.playerHp - bossDmg);
+
+        if (newPlayerHp === 0) {
+          playBlip();
+          setBattle({ active: false, bossHp: 100, playerHp: 100 });
+          nextLogs.push({
+            id: Date.now() + 1,
+            text: `⚡ Shader hit for ${playerDmg} DMG! [Dragon HP: ${newBossHp}/100]\n🔥 Dragon countered with Stack Overflow for ${bossDmg} DMG!\n\n💀 YOU DIED! Process terminated. Type "boss" to try again.`,
+            type: 'error',
+          });
+          setLogs(nextLogs);
+          setInput('');
+          return;
+        }
+
+        setBattle({ active: true, bossHp: newBossHp, playerHp: newPlayerHp });
+        nextLogs.push({
+          id: Date.now() + 1,
+          text: `⚡ Shader hit for ${playerDmg} DMG! [Dragon HP: ${newBossHp}/100]\n🔥 Dragon countered with Stack Overflow for ${bossDmg} DMG! [Your HP: ${newPlayerHp}/100]\nCommands: 1.attack | 2.cast | 3.heal | 4.flee`,
+          type: 'output',
+        });
+        setLogs(nextLogs);
+        setInput('');
+        return;
+      }
+
+      if (cmd === 'heal' || cmd === 'potion' || cmd === '3') {
+        playBlip();
+        const healedHp = Math.min(100, battle.playerHp + 35);
+        const bossDmg = Math.floor(Math.random() * 10) + 8;
+        const finalHp = Math.max(1, healedHp - bossDmg);
+
+        setBattle({ active: true, bossHp: battle.bossHp, playerHp: finalHp });
+        nextLogs.push({
+          id: Date.now() + 1,
+          text: `🧪 Drank Thermal Paste Elixir (+35 HP)! Dragon nipped for ${bossDmg} DMG.\n[Your HP: ${finalHp}/100 | Dragon HP: ${battle.bossHp}/100]\nCommands: 1.attack | 2.cast | 3.heal | 4.flee`,
+          type: 'output',
+        });
+        setLogs(nextLogs);
+        setInput('');
+        return;
+      }
+
+      if (cmd === 'flee' || cmd === 'run' || cmd === '4') {
+        playBlip();
+        setBattle({ active: false, bossHp: 100, playerHp: 100 });
+        nextLogs.push({
+          id: Date.now() + 1,
+          text: '💨 Retreated to the lobby! Combat terminated. System shell restored.',
+          type: 'output',
+        });
+        setLogs(nextLogs);
+        setInput('');
+        return;
+      }
+
+      nextLogs.push({
+        id: Date.now() + 1,
+        text: 'Unknown combat directive! Valid commands:\n 1. attack\n 2. cast\n 3. heal\n 4. flee',
+        type: 'error',
+      });
+      setLogs(nextLogs);
+      setInput('');
+      return;
+    }
 
     switch (cmd) {
       case 'help':
         nextLogs.push({
           id: Date.now() + 1,
-          text: 'AVAILABLE DIRECTIVES:\n • sudo join tag - Join Discord guild\n • palette       - Open Command Palette (Ctrl+K)\n • xp            - Claim free guild XP\n • status        - Check cluster telemetry\n • whoami        - View player profile\n • clear         - Clear terminal display\n\nCHEATS & EASTER EGGS:\n • youdied       - Elden Ring death screen\n • 500kg         - Helldivers 2 orbital stratagem\n • ace           - Valorant 5K ace kill fanfare\n • wish          - Genshin/Star Rail 5-star pull\n • sandevistan   - Cyberpunk neural dilation\n • diamonds      - Minecraft advancement\n • exit          - Close terminal',
+          text: 'AVAILABLE DIRECTIVES:\n • sudo join tag - Join Discord guild\n • boss / battle - Challenge the Segfault Dragon\n • palette       - Open Command Palette (Ctrl+K)\n • xp            - Claim free guild XP\n • status        - Check cluster telemetry\n • whoami        - View player profile\n • clear         - Clear terminal display\n\nCHEATS & EASTER EGGS:\n • youdied       - Elden Ring death screen\n • 500kg         - Helldivers 2 orbital stratagem\n • ace           - Valorant 5K ace kill fanfare\n • wish          - Genshin/Star Rail 5-star pull\n • sandevistan   - Cyberpunk neural dilation\n • diamonds      - Minecraft advancement\n • exit          - Close terminal',
           type: 'output',
+        });
+        break;
+
+      case 'boss':
+      case 'battle':
+      case 'fight':
+        playPowerUp();
+        setBattle({ active: true, bossHp: 100, playerHp: 100 });
+        nextLogs.push({
+          id: Date.now() + 1,
+          text: `
+  <>=======()
+ (\\/\\___   /|\\\\          [SEGFAULT DRAGON - LVL 99]
+       \\_/ | \\\\         BOSS HP: 100 / 100
+        /  /\\ \\\\        YOUR HP: 100 / 100
+       /  /  \\ \\\\
+ 
+⚠️ WARNING: CORRUPTED HEAP DETECTED!
+COMBAT COMMANDS:
+ • "attack" (or "1") - Guild Blade Slash (22-36 DMG)
+ • "cast"   (or "2") - Overclock Shader (32-51 DMG)
+ • "heal"   (or "3") - Thermal Paste Elixir (+35 HP)
+ • "flee"   (or "4") - Retreat to Shell`,
+          type: 'success',
         });
         break;
 
@@ -220,20 +392,26 @@ export default function SecretTerminal({ isOpen, onClose }: SecretTerminalProps)
 
         {/* Command Input Form */}
         <form onSubmit={handleCommand} className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-zinc-900/80 border-t border-white/[0.08]">
-          <span className="text-yellow-400 font-bold">&gt;</span>
+          <span className={battle.active ? "text-rose-400 font-bold" : "text-yellow-400 font-bold"}>
+            {battle.active ? '⚔️' : '>'}
+          </span>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="type 'sudo join tag' or 'help'..."
+            placeholder={battle.active ? "1. attack | 2. cast | 3. heal | 4. flee" : "type 'boss', 'sudo join tag', or 'help'..."}
             className="flex-1 bg-transparent text-white font-mono outline-none text-xs sm:text-sm placeholder:text-zinc-600 min-h-[38px]"
           />
           <button
             type="submit"
-            className="text-xs text-yellow-400 hover:text-yellow-300 font-bold px-3 py-1.5 min-h-[36px] bg-yellow-400/10 rounded-lg border border-yellow-400/30 transition-colors shrink-0"
+            className={`text-xs font-bold px-3 py-1.5 min-h-[36px] rounded-lg border transition-colors shrink-0 ${
+              battle.active
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
+                : 'text-yellow-400 hover:text-yellow-300 bg-yellow-400/10 border-yellow-400/30'
+            }`}
           >
-            EXECUTE
+            {battle.active ? 'STRIKE' : 'EXECUTE'}
           </button>
         </form>
       </div>

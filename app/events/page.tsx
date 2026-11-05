@@ -9,6 +9,7 @@ import { events, type Event, type EventStatus, type EventCategory } from '../dat
 import { playBlip, playSelect } from '../components/SoundEffects';
 import { useToast } from '../components/Toast';
 import { recordPageVisit } from '../components/EasterEggs';
+import { getGoogleCalendarUrl, downloadIcsFile } from '../utils/calendar';
 
 type FilterTab = EventStatus | 'all';
 
@@ -79,6 +80,7 @@ function statusBadge(status: EventStatus) {
 
 function EventCard({ event }: { event: Event }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showCalMenu, setShowCalMenu] = useState(false);
   const isTech = event.category === 'Technology';
   const { showToast } = useToast();
 
@@ -87,6 +89,10 @@ function EventCard({ event }: { event: Event }) {
   const dateSub = dateParts.slice(1).join(' ') || (event.isPlaceholder ? 'SOON' : '');
 
   const handleClick = () => {
+    if (showCalMenu) {
+      setShowCalMenu(false);
+      return;
+    }
     if (event.isPlaceholder) {
       playSelect();
       showToast('📢 Slot reserved: Quest announcement drops on Discord soon!', {
@@ -112,6 +118,22 @@ function EventCard({ event }: { event: Event }) {
       navigator.clipboard.writeText(`${event.title} - ${event.fullDate} | ${event.link}`);
       showToast(`📋 Quest details copied for "${event.title}"!`, { type: 'success', icon: '📋' });
     }
+  };
+
+  const handleGoogleCal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    playSelect();
+    window.open(getGoogleCalendarUrl(event), '_blank');
+    showToast(`📅 Opening Google Calendar for "${event.title}"`, { type: 'info', icon: '📅' });
+    setShowCalMenu(false);
+  };
+
+  const handleIcs = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    playSelect();
+    downloadIcsFile(event);
+    showToast(`📥 Downloaded .ics file for "${event.title}"`, { type: 'success', icon: '📅' });
+    setShowCalMenu(false);
   };
 
   return (
@@ -222,16 +244,54 @@ function EventCard({ event }: { event: Event }) {
         </div>
 
         {/* Action Row */}
-        <div className="flex items-center justify-between text-xs pt-2 border-t border-white/[0.06]">
-          <button
-            onClick={handleCopy}
-            className="text-zinc-500 hover:text-yellow-400 transition-colors font-mono flex items-center gap-1"
-            title="Copy quest link"
-          >
-            <span>🔗</span>
-            <span>Share</span>
-          </button>
-          <span className="text-yellow-400 group-hover:translate-x-1 transition-transform font-semibold font-mono text-[11px] inline-flex items-center gap-1">
+        <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-800 relative">
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={handleCopy}
+              className="text-zinc-500 hover:text-yellow-400 transition-colors font-mono flex items-center gap-1 text-[11px]"
+              title="Copy quest link"
+            >
+              <span>🔗</span>
+              <span>Share</span>
+            </button>
+
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  playBlip();
+                  setShowCalMenu(!showCalMenu);
+                }}
+                className="text-zinc-500 hover:text-cyan-400 transition-colors font-mono flex items-center gap-1 text-[11px]"
+                title="Add to Calendar"
+              >
+                <span>📅</span>
+                <span>Cal</span>
+              </button>
+
+              {showCalMenu && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute bottom-full left-0 mb-2 w-44 bg-[#0c0c14] border-2 border-black rounded-xl p-1.5 shadow-[4px_4px_0px_0px_#00f0ff] z-30 font-mono text-xs flex flex-col gap-1"
+                >
+                  <button
+                    onClick={handleGoogleCal}
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-cyan-400 hover:text-black text-zinc-300 font-bold transition-all text-[11px] flex items-center gap-1.5"
+                  >
+                    <span>🌐</span> Google Cal
+                  </button>
+                  <button
+                    onClick={handleIcs}
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-yellow-400 hover:text-black text-zinc-300 font-bold transition-all text-[11px] flex items-center gap-1.5"
+                  >
+                    <span>📥</span> iCal / Outlook (.ics)
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <span className="text-yellow-400 group-hover:translate-x-1 transition-transform font-bold font-mono text-[11px] inline-flex items-center gap-1">
             {event.isPlaceholder ? 'DISCORD INTEL ↗' : 'VIEW QUEST ↗'}
           </span>
         </div>

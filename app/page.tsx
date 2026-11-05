@@ -17,6 +17,7 @@ import ProTipTicker from './components/ProTipTicker';
 import { playBlip, playSelect, playPowerUp } from './components/SoundEffects';
 import { recordPageVisit, recordInteraction } from './components/EasterEggs';
 import { events as allEvents } from './data/events';
+import { getGoogleCalendarUrl } from './utils/calendar';
 
 library.add(faCoffee, faGithub, faLinkedin, faDiscord, faInstagram);
 
@@ -104,7 +105,21 @@ function EventCard({ title, date, description, category, link, xpReward, difficu
 
       {/* Quest Action Footer */}
       <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-mono">
-        <span className="text-zinc-500 font-semibold">{xpReward ?? '+2,500 XP'}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-zinc-500 font-semibold">{xpReward ?? '+2,500 XP'}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              playSelect();
+              window.open(getGoogleCalendarUrl({ title, description, fullDate: date, link }), '_blank');
+            }}
+            className="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center gap-1 text-[11px]"
+            title="Add to Google Calendar"
+          >
+            <span>📅</span>
+            <span>Cal</span>
+          </button>
+        </div>
         <span className={`font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform ${isTech ? 'text-cyan-400' : 'text-yellow-400'}`}>
           VIEW QUEST ↗
         </span>
